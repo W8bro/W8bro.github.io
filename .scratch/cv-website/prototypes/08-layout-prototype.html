@@ -1,0 +1,398 @@
+<!--
+  PROTOTYPE — throwaway, for ticket #08 (Prototype the single-page site layout).
+  Three structurally different variants of the CV site layout, switchable via ?variant=A|B|C
+  and the floating bar at the bottom. No Astro project exists yet (pre-implementation), so
+  this is a standalone single HTML file (sub-shape B) rather than a route inside a real app.
+  Content below is real-ish sample data from ticket #01's inventory, trimmed down — not final
+  copy, not final styling. Double-click this file to open it in a browser.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>[PROTOTYPE] CV Site Layout — #08</title>
+<style>
+  :root {
+    /* Tom's palette: #5F5449 (ink), #9B6A6C (accent), #B09398 (soft accent), #CEDFD9 (alt bg) */
+    --ink: #5F5449;
+    --muted: rgba(95, 84, 73, 0.62);       /* translucent ink, for secondary text */
+    --line: rgba(176, 147, 152, 0.55);     /* soft accent, for borders/dividers */
+    --accent: #9B6A6C;
+    --accent-soft: #B09398;
+    --bg: #ffffff;
+    --bg-alt: #CEDFD9;
+    --chip: rgba(176, 147, 152, 0.28);     /* soft accent, translucent, for tag chips */
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+  }
+  h1, h2, h3 { margin: 0 0 0.4em; line-height: 1.2; }
+  p { line-height: 1.55; color: var(--muted); }
+  .section-title { font-size: 1.6rem; margin-bottom: 1rem; }
+  .tag {
+    display: inline-block;
+    background: var(--chip);
+    color: var(--ink);
+    padding: 0.2em 0.7em;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    margin: 0.15em 0.3em 0.15em 0;
+  }
+  .entry { margin-bottom: 1.4rem; }
+  .entry h3 { font-size: 1.05rem; }
+  .entry .meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 0.3em; }
+  .variant { display: none; }
+  .variant.active { display: block; }
+
+  /* ---------- Variant A: Classic single-column resume ---------- */
+  #variant-a .topnav {
+    position: sticky; top: 0; z-index: 5;
+    display: flex; gap: 1.5rem; justify-content: center;
+    background: var(--bg); border-bottom: 1px solid var(--line);
+    padding: 0.9rem 1rem;
+  }
+  #variant-a .topnav a { color: var(--ink); text-decoration: none; font-size: 0.9rem; font-weight: 600; }
+  #variant-a .doc { max-width: 720px; margin: 0 auto; padding: 2.5rem 1.25rem 6rem; }
+  #variant-a .hero { text-align: center; margin-bottom: 3rem; }
+  #variant-a .hero .photo {
+    width: 96px; height: 96px; border-radius: 50%; background: var(--bg-alt);
+    margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: 0.75rem; border: 1px solid var(--line);
+  }
+  #variant-a section { margin-bottom: 2.75rem; }
+  #variant-a .featured-badge { font-size: 0.7rem; color: var(--accent); font-weight: 700; letter-spacing: 0.03em; }
+  #variant-a .all-projects summary { cursor: pointer; color: var(--accent); font-weight: 600; margin-top: 0.5rem; }
+
+  /* ---------- Variant B: Sidebar dashboard ---------- */
+  #variant-b { display: flex; min-height: 100vh; }
+  #variant-b.active { display: flex; }
+  #variant-b .sidebar {
+    width: 260px; flex-shrink: 0; background: var(--bg-alt);
+    border-right: 1px solid var(--line); padding: 2rem 1.5rem;
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  }
+  #variant-b .sidebar .photo {
+    width: 72px; height: 72px; border-radius: 12px; background: var(--chip);
+    margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: 0.7rem;
+  }
+  #variant-b .sidebar nav { margin: 1.5rem 0; display: flex; flex-direction: column; gap: 0.5rem; }
+  #variant-b .sidebar nav a { color: var(--ink); text-decoration: none; font-size: 0.85rem; font-weight: 600; }
+  #variant-b .sidebar h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 1.25rem 0 0.5rem; }
+  #variant-b .main { flex: 1; padding: 2.5rem 3rem 6rem; max-width: 900px; }
+  #variant-b .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  #variant-b .card {
+    border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.1rem; background: var(--bg);
+  }
+  #variant-b .card .featured-badge { font-size: 0.65rem; color: var(--accent); font-weight: 700; }
+
+  /* ---------- Variant C: Full-width story scroll ---------- */
+  #variant-c .dotnav {
+    position: fixed; right: 1.25rem; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 0.6rem; z-index: 5;
+  }
+  #variant-c .dotnav a {
+    width: 10px; height: 10px; border-radius: 50%; background: var(--line); display: block;
+  }
+  #variant-c .block { width: 100%; padding: 5rem 1.5rem; }
+  #variant-c .block.alt { background: var(--bg-alt); }
+  #variant-c .block-inner { max-width: 880px; margin: 0 auto; }
+  #variant-c .hero { text-align: left; }
+  #variant-c .hero h1 { font-size: 2.6rem; }
+  #variant-c .hero-row { display: flex; align-items: center; gap: 2.5rem; flex-wrap: wrap; }
+  #variant-c .hero-photo {
+    width: 160px; height: 160px; border-radius: 50%; background: var(--chip); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; color: var(--muted);
+    font-size: 0.8rem; border: 1px solid var(--line);
+  }
+  #variant-c .hero-text { flex: 1; min-width: 260px; }
+  #variant-c .tabs { display: flex; gap: 0.75rem; margin-bottom: 1.25rem; }
+  #variant-c .tab { padding: 0.4em 1em; border-radius: 999px; border: 1px solid var(--line); cursor: pointer; font-size: 0.85rem; background: var(--bg); }
+  #variant-c .tab.active-tab { background: var(--accent); color: #fff; border-color: var(--accent); }
+  #variant-c .proj-panel { display: none; }
+  #variant-c .proj-panel.active-tab-panel { display: block; }
+
+  /* ---------- Floating switcher bar (shared) ---------- */
+  #proto-switcher {
+    position: fixed; bottom: 1.25rem; left: 50%; transform: translateX(-50%);
+    background: #111; color: #fff; border-radius: 999px;
+    padding: 0.5rem 0.4rem; display: flex; align-items: center; gap: 0.5rem;
+    font-family: "Segoe UI", Arial, sans-serif; font-size: 0.85rem;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.35); z-index: 999;
+  }
+  #proto-switcher button {
+    background: rgba(255,255,255,0.12); color: #fff; border: none; border-radius: 50%;
+    width: 28px; height: 28px; cursor: pointer; font-size: 0.9rem;
+  }
+  #proto-switcher button:hover { background: rgba(255,255,255,0.25); }
+  #proto-switcher .label { padding: 0 0.6rem; white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<!-- ================= VARIANT A ================= -->
+<div class="variant" id="variant-a">
+  <nav class="topnav">
+    <a href="#a-about">About</a>
+    <a href="#a-experience">Experience</a>
+    <a href="#a-education">Education</a>
+    <a href="#a-skills">Skills</a>
+    <a href="#a-projects">Projects</a>
+    <a href="#a-publications">Publications</a>
+  </nav>
+  <div class="doc">
+    <div class="hero" id="a-about">
+      <div class="photo">photo</div>
+      <h1>Tom Andersson</h1>
+      <p>Systems/software developer with 6+ years building test systems and control
+      software for heavy industry. M.Sc. in Engineering (Robotics), specializing in
+      signal processing, control theory, electronics, and machine learning.</p>
+    </div>
+
+    <section id="a-experience">
+      <h2 class="section-title">Experience</h2>
+      <div class="entry"><h3>Prevas AB — In-house Software Developer</h3><div class="meta">Aug 2022 – Present · Västerås</div><p>SICS group: control software for reheating furnaces and robot cells.</p></div>
+      <div class="entry"><h3>Prevas AB — In-house Test System Developer</h3><div class="meta">Aug 2019 – Aug 2022 · Västerås</div><p>Designs and develops in-house test systems for lab and production environments.</p></div>
+      <div class="entry"><h3>Mälardalens University — Research Engineer</h3><div class="meta">Jun – Aug 2019</div><p>Continued development of a self-stabilizing bicycle.</p></div>
+      <div class="entry"><h3>ABB Robotics — System Validation Technician</h3><div class="meta">Summers 2016 &amp; 2017</div></div>
+      <div class="entry"><h3>IKEA — Logistics Worker</h3><div class="meta">Jul – Aug 2013</div></div>
+    </section>
+
+    <section id="a-education">
+      <h2 class="section-title">Education</h2>
+      <div class="entry"><h3>Mälardalens University, Västerås</h3><div class="meta">2014 – 2019</div><p>M.Sc. in Engineering, Robotics.</p></div>
+    </section>
+
+    <section id="a-skills">
+      <h2 class="section-title">Skills</h2>
+      <p><strong>Programming</strong><br><span class="tag">C#</span><span class="tag">LabVIEW</span><span class="tag">MATLAB</span><span class="tag">C</span><span class="tag">JavaScript</span></p>
+      <p><strong>Software &amp; Tools</strong><br><span class="tag">SQL</span><span class="tag">Entity Framework</span><span class="tag">Git</span><span class="tag">Docker</span><span class="tag">Azure Pipelines</span></p>
+      <p><strong>Domain</strong><br><span class="tag">Signal Processing</span><span class="tag">Control Theory</span><span class="tag">Machine Learning</span><span class="tag">Embedded Systems</span></p>
+    </section>
+
+    <section id="a-projects">
+      <h2 class="section-title">Projects</h2>
+      <div class="entry"><span class="featured-badge">CHERRY PICK</span><h3>Custom robot cell (Cell Manager)</h3><div class="meta">Sandvik Rock Tools · 2025 – 2026</div><p>New iteration of Prevas' in-house Cell Manager software.</p></div>
+      <div class="entry"><span class="featured-badge">CHERRY PICK</span><h3>FOCS overhaul</h3><div class="meta">SSAB EMEA AB · 2024</div><p>Full overhaul: .NET upgrade, Serilog, Entity Framework, 64-bit Fortran core.</p></div>
+      <div class="entry"><span class="featured-badge">CHERRY PICK</span><h3>IFC test system</h3><div class="meta">Cytiva · 2020 – 2022</div><p>Real-time controller + client app for testing Integrated Fluidic Cartridges.</p></div>
+      <details class="all-projects">
+        <summary>Show all projects (8)</summary>
+        <div class="entry"><h3>Thermal camera integration</h3><div class="meta">Celsa Global Steel Wire · 2023</div></div>
+        <div class="entry"><h3>Cold rolling mill platform upgrade</h3><div class="meta">Outokumpu · 2023 – 2024</div></div>
+        <div class="entry"><h3>Cascade controller for a riderless bicycle (Thesis)</h3><div class="meta">Mälardalens University · 2019</div></div>
+        <div class="entry"><h3>Clearings measurement system replica</h3><div class="meta">Design Tech i Smedjebacken AB · 2024</div></div>
+        <div class="entry"><h3>Confidential product test system</h3><div class="meta">Sectra Communications · 2021 – 2022</div></div>
+      </details>
+    </section>
+
+    <section id="a-publications">
+      <h2 class="section-title">Publications</h2>
+      <div class="entry"><h3>A Comparative Analysis and Design of Controllers for Autonomous Bicycles</h3><div class="meta">2021 European Control Conference · IEEE Xplore</div></div>
+      <div class="entry"><h3>A Loop Shaping Method for Stabilising a Riderless Bicycle</h3><div class="meta">2019 European Conference on Mobile Robots · IEEE Xplore</div></div>
+      <div class="entry"><h3>Development of a Robust Cascade Controller for a Riderless Bicycle</h3><div class="meta">MDU Master's Thesis · DiVA</div></div>
+    </section>
+  </div>
+</div>
+
+<!-- ================= VARIANT B ================= -->
+<div class="variant" id="variant-b">
+  <aside class="sidebar">
+    <div class="photo">photo</div>
+    <h1 style="font-size:1.2rem;">Tom Andersson</h1>
+    <p style="font-size:0.85rem;">Systems/software developer, M.Sc. Robotics.</p>
+    <nav>
+      <a href="#b-experience">Experience</a>
+      <a href="#b-projects">Projects</a>
+      <a href="#b-education">Education</a>
+      <a href="#b-publications">Publications</a>
+    </nav>
+    <h4>Programming</h4>
+    <span class="tag">C#</span><span class="tag">LabVIEW</span><span class="tag">MATLAB</span><span class="tag">C</span>
+    <h4>Software &amp; Tools</h4>
+    <span class="tag">SQL</span><span class="tag">Entity Framework</span><span class="tag">Git</span><span class="tag">Docker</span>
+    <h4>Domain</h4>
+    <span class="tag">Signal Processing</span><span class="tag">Control Theory</span><span class="tag">ML</span>
+  </aside>
+  <div class="main">
+    <section id="b-experience">
+      <h2 class="section-title">Experience</h2>
+      <div class="entry"><h3>Prevas AB — Software Developer</h3><div class="meta">Aug 2022 – Present · Västerås</div><p>SICS group: control software for reheating furnaces and robot cells.</p></div>
+      <div class="entry"><h3>Prevas AB — Test System Developer</h3><div class="meta">Aug 2019 – Aug 2022 · Västerås</div></div>
+      <div class="entry"><h3>Mälardalens University — Research Engineer</h3><div class="meta">Jun – Aug 2019</div></div>
+    </section>
+
+    <section id="b-projects">
+      <h2 class="section-title">Projects</h2>
+      <div class="grid-2">
+        <div class="card"><span class="featured-badge">FEATURED</span><h3>Cell Manager</h3><div class="meta">Sandvik Rock Tools · 2025–2026</div></div>
+        <div class="card"><span class="featured-badge">FEATURED</span><h3>FOCS overhaul</h3><div class="meta">SSAB EMEA · 2024</div></div>
+        <div class="card"><span class="featured-badge">FEATURED</span><h3>IFC test system</h3><div class="meta">Cytiva · 2020–2022</div></div>
+        <div class="card"><span class="featured-badge">FEATURED</span><h3>Thermal camera integration</h3><div class="meta">Celsa · 2023</div></div>
+        <div class="card"><h3>Rolling mill upgrade</h3><div class="meta">Outokumpu · 2023–2024</div></div>
+        <div class="card"><h3>Bicycle thesis</h3><div class="meta">MDU · 2019</div></div>
+      </div>
+    </section>
+
+    <section id="b-education">
+      <h2 class="section-title">Education</h2>
+      <div class="card"><h3>Mälardalens University, Västerås</h3><div class="meta">2014 – 2019 · M.Sc. Engineering, Robotics</div></div>
+    </section>
+
+    <section id="b-publications">
+      <h2 class="section-title">Publications</h2>
+      <div class="entry"><h3>A Comparative Analysis and Design of Controllers for Autonomous Bicycles</h3><div class="meta">2021 ECC · IEEE Xplore</div></div>
+      <div class="entry"><h3>A Loop Shaping Method for Stabilising a Riderless Bicycle</h3><div class="meta">2019 ECMR · IEEE Xplore</div></div>
+      <div class="entry"><h3>Cascade Controller for a Riderless Bicycle</h3><div class="meta">MDU Thesis · DiVA</div></div>
+    </section>
+  </div>
+</div>
+
+<!-- ================= VARIANT C ================= -->
+<div class="variant" id="variant-c">
+  <nav class="dotnav">
+    <a href="#c-about" title="About"></a>
+    <a href="#c-experience" title="Experience"></a>
+    <a href="#c-projects" title="Projects"></a>
+    <a href="#c-education" title="Education"></a>
+    <a href="#c-skills" title="Skills"></a>
+    <a href="#c-publications" title="Publications"></a>
+  </nav>
+
+  <div class="block hero" id="c-about">
+    <div class="block-inner hero-row">
+      <div class="hero-text">
+        <h1>Tom Andersson</h1>
+        <p style="font-size:1.1rem;">Systems/software developer with 6+ years building test
+        systems and control software for heavy industry. M.Sc. in Engineering (Robotics).</p>
+      </div>
+      <div class="hero-photo">photo</div>
+    </div>
+  </div>
+
+  <div class="block alt" id="c-experience">
+    <div class="block-inner">
+      <h2 class="section-title">Experience</h2>
+      <div class="entry"><h3>Prevas AB — Software Developer</h3><div class="meta">Aug 2022 – Present</div></div>
+      <div class="entry"><h3>Prevas AB — Test System Developer</h3><div class="meta">Aug 2019 – Aug 2022</div></div>
+      <div class="entry"><h3>Mälardalens University — Research Engineer</h3><div class="meta">Jun – Aug 2019</div></div>
+    </div>
+  </div>
+
+  <div class="block" id="c-projects">
+    <div class="block-inner">
+      <h2 class="section-title">Projects</h2>
+      <div class="tabs">
+        <div class="tab active-tab" data-tab="featured">Cherry picks</div>
+        <div class="tab" data-tab="all">All projects (8)</div>
+      </div>
+      <div class="proj-panel active-tab-panel" data-panel="featured">
+        <div class="entry"><h3>Cell Manager</h3><div class="meta">Sandvik Rock Tools · 2025–2026</div></div>
+        <div class="entry"><h3>FOCS overhaul</h3><div class="meta">SSAB EMEA · 2024</div></div>
+        <div class="entry"><h3>IFC test system</h3><div class="meta">Cytiva · 2020–2022</div></div>
+      </div>
+      <div class="proj-panel" data-panel="all">
+        <div class="entry"><h3>Thermal camera integration</h3><div class="meta">Celsa · 2023</div></div>
+        <div class="entry"><h3>Rolling mill upgrade</h3><div class="meta">Outokumpu · 2023–2024</div></div>
+        <div class="entry"><h3>Bicycle thesis</h3><div class="meta">MDU · 2019</div></div>
+        <div class="entry"><h3>Clearings measurement replica</h3><div class="meta">Design Tech i Smedjebacken · 2024</div></div>
+        <div class="entry"><h3>Confidential product test system</h3><div class="meta">Sectra Communications · 2021–2022</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block alt" id="c-education">
+    <div class="block-inner">
+      <h2 class="section-title">Education</h2>
+      <div class="entry"><h3>Mälardalens University, Västerås</h3><div class="meta">2014 – 2019 · M.Sc. Engineering, Robotics</div></div>
+    </div>
+  </div>
+
+  <div class="block" id="c-skills">
+    <div class="block-inner">
+      <h2 class="section-title">Skills</h2>
+      <span class="tag">C#</span><span class="tag">LabVIEW</span><span class="tag">MATLAB</span><span class="tag">C</span>
+      <span class="tag">SQL</span><span class="tag">Entity Framework</span><span class="tag">Git</span><span class="tag">Docker</span>
+      <span class="tag">Signal Processing</span><span class="tag">Control Theory</span><span class="tag">Machine Learning</span>
+    </div>
+  </div>
+
+  <div class="block alt" id="c-publications">
+    <div class="block-inner">
+      <h2 class="section-title">Publications</h2>
+      <div class="entry"><h3>A Comparative Analysis and Design of Controllers for Autonomous Bicycles</h3><div class="meta">2021 ECC · IEEE Xplore</div></div>
+      <div class="entry"><h3>A Loop Shaping Method for Stabilising a Riderless Bicycle</h3><div class="meta">2019 ECMR · IEEE Xplore</div></div>
+      <div class="entry"><h3>Cascade Controller for a Riderless Bicycle</h3><div class="meta">MDU Thesis · DiVA</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= Switcher bar ================= -->
+<div id="proto-switcher">
+  <button id="proto-prev" aria-label="Previous variant">&#8592;</button>
+  <span class="label" id="proto-label">A</span>
+  <button id="proto-next" aria-label="Next variant">&#8594;</button>
+</div>
+
+<script>
+  var VARIANTS = [
+    { key: 'A', name: 'Classic single-column resume' },
+    { key: 'B', name: 'Sidebar dashboard' },
+    { key: 'C', name: 'Full-width story scroll' }
+  ];
+
+  function getVariantFromUrl() {
+    var params = new URLSearchParams(window.location.search);
+    var v = (params.get('variant') || 'A').toUpperCase();
+    return VARIANTS.some(function (x) { return x.key === v; }) ? v : 'A';
+  }
+
+  function setVariant(key, pushUrl) {
+    VARIANTS.forEach(function (v) {
+      var el = document.getElementById('variant-' + v.key.toLowerCase());
+      el.classList.toggle('active', v.key === key);
+    });
+    var current = VARIANTS.find(function (v) { return v.key === key; });
+    document.getElementById('proto-label').textContent = current.key + ' (' + current.name + ')';
+    if (pushUrl) {
+      var params = new URLSearchParams(window.location.search);
+      params.set('variant', key);
+      history.replaceState(null, '', window.location.pathname + '?' + params.toString());
+    }
+  }
+
+  function cycle(dir) {
+    var current = getVariantFromUrl();
+    var idx = VARIANTS.findIndex(function (v) { return v.key === current; });
+    var next = VARIANTS[(idx + dir + VARIANTS.length) % VARIANTS.length];
+    setVariant(next.key, true);
+  }
+
+  document.getElementById('proto-prev').addEventListener('click', function () { cycle(-1); });
+  document.getElementById('proto-next').addEventListener('click', function () { cycle(1); });
+
+  document.addEventListener('keydown', function (e) {
+    var tag = (document.activeElement && document.activeElement.tagName) || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement.isContentEditable) return;
+    if (e.key === 'ArrowLeft') cycle(-1);
+    if (e.key === 'ArrowRight') cycle(1);
+  });
+
+  // Variant C: cherry-picks / all-projects tabs
+  document.querySelectorAll('#variant-c .tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      document.querySelectorAll('#variant-c .tab').forEach(function (t) { t.classList.remove('active-tab'); });
+      document.querySelectorAll('#variant-c .proj-panel').forEach(function (p) { p.classList.remove('active-tab-panel'); });
+      tab.classList.add('active-tab');
+      document.querySelector('#variant-c .proj-panel[data-panel="' + tab.dataset.tab + '"]').classList.add('active-tab-panel');
+    });
+  });
+
+  setVariant(getVariantFromUrl(), false);
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+title: Development of a test system for Integrated Fluidic Cartridges (IFC)
+client: Cytiva
+startDate: "2020-08"
+endDate: "2022-01"
+location: Västerås
+featured: true
+description: >
+  A testing system developed to evaluate Integrated Fluidic Cartridges (IFC),
+  including a real-time controller capable of performing independent tests and a
+  client application for controlling the controller. The system allows users to
+  define their own test sequences and reconfigure them without rebuilding the
+  entire real-time application. Responsibility: designing and programming the
+  application for the real-time controller, built using LabVIEW with National
+  Instruments' 'Actor' framework, which divides the program into asynchronous
+  processes in an object-oriented manner.
+tags:
+  - TCP/IP
+  - LabVIEW
+  - Applikationsarkitektur
+  - LabVIEW FPGA
+  - LabVIEW (GOOP)
+  - LabVIEW Real-Time
+  - NI Actor Framework

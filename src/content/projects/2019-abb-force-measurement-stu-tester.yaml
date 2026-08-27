@@ -1,0 +1,14 @@
+title: Configured and tested replacement cards for an STU-tester
+client: ABB force measurement
+startDate: "2019-08"
+endDate: "2019-09"
+location: Västerås
+featured: false
+description: >
+  A replacement card was manufactured for the Bluetooth-controlled circuit boards
+  that simulate the sensors on a rolling mill. These cards needed configuration and
+  testing before being shipped to the end user.
+tags:
+  - Electronics
+  - Bluetooth
+  - Atmel AVR

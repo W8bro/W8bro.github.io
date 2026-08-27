@@ -1,0 +1,21 @@
+title: "[Thesis] Development of a Robust Cascade Controller for a Riderless Bicycle"
+client: Mälardalens högskola
+startDate: "2019-01"
+endDate: "2019-06"
+location: Västerås
+featured: true
+description: >
+  Developing and reviewing different control structures based on robustness and
+  balance, to get an unstable cycle to self-stabilize using only the steering angle.
+  Part of a research project aimed at developing more realistic self-driving cycles,
+  to achieve safer classification algorithms for autonomous vehicles.
+tags:
+  - MATLAB
+  - LaTeX
+  - SolidWorks
+  - Electronics
+  - LabVIEW
+  - Machine Learning
+  - MATLAB/Simulink
+  - Reglerteknik
+  - IMU

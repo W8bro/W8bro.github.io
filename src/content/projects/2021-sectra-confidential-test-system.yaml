@@ -1,0 +1,14 @@
+title: Development of a test system for testing a confidential product for production use
+client: Sectra Communications
+startDate: "2021-09"
+endDate: "2022-06"
+location: Västerås
+featured: false
+description: >
+  Development of a test system for verification and testing of confidential
+  circuit boards.
+tags:
+  - Electronics
+  - LabVIEW
+  - System Architecture
+  - TestStand

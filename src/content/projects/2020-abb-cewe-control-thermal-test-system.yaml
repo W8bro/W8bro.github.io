@@ -1,0 +1,25 @@
+title: Development of thermal test system for soft-starters and contactors
+client: ABB Cewe-Control
+startDate: "2020-01"
+endDate: "2020-04"
+location: Västerås
+featured: false
+description: >
+  A test system to evaluate soft-starters' and contactors' thermal development
+  during long operations, consisting of a client and server component. The server
+  part is a National Instruments real-time controller that independently controls
+  the test object and collects/saves data; the client application communicates with
+  it, synchronizes, and initiates tests. Role: designing and programming both the
+  client application and the real-time controller, gaining a solid understanding of
+  fundamental software architecture and in-depth knowledge of National Instruments'
+  'Actor' framework.
+tags:
+  - TCP/IP
+  - GUI
+  - LabVIEW
+  - Applikationsarkitektur
+  - LabVIEW FPGA
+  - LabVIEW (GOOP)
+  - LabVIEW Real-Time
+  - Reglerteknik
+  - NI Actor Framework

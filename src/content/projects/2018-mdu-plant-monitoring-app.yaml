@@ -1,0 +1,19 @@
+title: Mobile application for monitoring plant growth
+client: Mälardalens Högskola
+startDate: "2018-03"
+endDate: "2018-06"
+location: Västerås
+featured: false
+description: >
+  Developed a monitoring system to enhance plant growth by tracking soil moisture
+  and sunlight exposure, with an Android application informing users when their
+  plants require water or sunlight. First hands-on experience with Java programming
+  and Android app development.
+tags:
+  - Embedded Systems
+  - Java
+  - Electronics
+  - Bluetooth
+  - Sensor systems
+  - Sensor fusion
+  - Android Developer

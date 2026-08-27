@@ -1,0 +1,15 @@
+title: "Development of a CNN to solve Raven's progressive matrices (IQ tests)"
+client: Mälardalens högskola
+startDate: "2018-01"
+endDate: "2018-03"
+location: Västerås
+featured: false
+description: >
+  Implemented a Convolutional Neural Network (CNN) to solve logical IQ test
+  sequences, including writing a program to generate a large training dataset —
+  learning the intricacies of building a CNN, and the importance of trust and
+  collaboration among team members.
+tags:
+  - MATLAB
+  - Machine Learning
+  - Neural Network

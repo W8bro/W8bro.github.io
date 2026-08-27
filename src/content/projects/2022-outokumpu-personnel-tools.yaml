@@ -1,0 +1,23 @@
+title: >-
+  Resource consultant at Outokumpu working as a fullstack developer, developing
+  customer-specific personnel tools at the domain level
+client: Outokumpu stainless AB
+startDate: "2022-08"
+endDate: "2023-02"
+location: Torshälla
+featured: false
+description: >
+  Development of web-based personnel tools, plus modernization of the user
+  interface. The customer had a set of old Delphi applications that needed to be
+  migrated to a new platform. Objective: lift the old Delphi applications to React
+  and/or Blazor, making it easier for IT to maintain the applications and simplify
+  deployment within the domain. The biggest challenges were identifying what users
+  needed and building an intuitive user flow that the previous programs lacked.
+tags:
+  - JavaScript
+  - SQL
+  - C#
+  - Entity Framework
+  - Bootstrap
+  - React.js
+  - Blazor

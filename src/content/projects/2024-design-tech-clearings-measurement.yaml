@@ -1,0 +1,16 @@
+title: Replica of a previous clearings measurement system
+client: Design Tech I Smedjebacken AB (Detech AB)
+startDate: "2024-06"
+endDate: "2024-09"
+location: Västerås
+featured: false
+description: >
+  A copy of an existing system delivered to Hitachi in Ludvika. This system measures
+  clearings in capacitors (short discharges between the internal layers of the
+  capacitor) to ensure quality during production. Role: overseeing the software
+  integration from the previous project to the next.
+tags:
+  - Electronics
+  - LabVIEW
+  - Signalbehandling
+  - LabVIEW FPGA

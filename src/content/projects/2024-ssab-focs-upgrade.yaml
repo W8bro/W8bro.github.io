@@ -1,0 +1,25 @@
+title: >-
+  An upgrade of an existing FOCS (Furnace Optimization Control System),
+  integrating new SDKs (Serilog, MS SQL Server, and Entity Framework)
+client: SSAB EMEA AB
+startDate: "2024-05"
+endDate: "2024-09"
+location: Västerås
+featured: true
+description: >
+  SSAB in Borlänge needed an upgrade of their existing FOCS system. The system
+  required a complete overhaul involving several key updates, such as switching to
+  the latest .NET Framework version, implementing new logging (Serilog), introducing
+  a new VIP client, adopting Entity Framework, and compiling the Fortran core in a
+  64-bit version. Objective: a drop-in replacement for the existing FOCS with
+  important security updates, and improved in-house possibilities for SSAB to
+  further develop the platform. The most significant challenge was testing — given
+  the extensive code removal in such a large project, it became nearly impossible to
+  conduct thorough testing until all build components were finalized and integrated.
+tags:
+  - TCP/IP
+  - SQL
+  - C#
+  - Entity Framework
+  - Simulators
+  - Fortran

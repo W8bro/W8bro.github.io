@@ -1,0 +1,15 @@
+title: Implemented and evaluated several different global path planners
+client: Mälardalens högskola
+startDate: "2018-06"
+endDate: "2018-09"
+location: Västerås
+featured: false
+description: >
+  Implemented and evaluated three different global planners. Goal: develop and
+  compare Dijkstra's algorithm, A*, and D* Lite regarding execution time and map
+  cost updates, gaining a broader understanding of how they apply to mobile
+  robotics for finding the optimal path.
+tags:
+  - MATLAB
+  - Comparison testing
+  - Globala planerare

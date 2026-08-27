@@ -1,0 +1,13 @@
+title: Code review and continued development of software for an artificial nose
+client: VOC Diagnostics
+startDate: "2021-01"
+endDate: "2021-05"
+location: Sundbyberg
+featured: false
+description: >
+  With a transfer of a project from Novator Solutions to Prevas, the code needed to
+  be reviewed and built to ensure it was complete and executable. Task: review,
+  build, and complete the documentation of the transferred code from Novator.
+tags:
+  - LabVIEW
+  - LabVIEW (GOOP)

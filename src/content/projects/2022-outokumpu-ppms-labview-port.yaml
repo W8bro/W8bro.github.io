@@ -1,0 +1,18 @@
+title: "Rewriting an old LabVIEW program to a C# module: PPMS"
+client: Outokumpu Stainless AB
+startDate: "2022-08"
+endDate: "2022-09"
+location: Västerås
+featured: false
+description: >
+  Porting an old LabVIEW program containing analysis and calculation tools for
+  steel production to C#. Objective: facilitate Outokumpu's ability to easily
+  maintain and further develop their own systems, by removing hard-to-maintain
+  LabVIEW programs. The main challenge was building robust test benches to ensure
+  consistent and equivalent behavior in both programs.
+tags:
+  - SQL
+  - C#
+  - Entity Framework
+  - LabVIEW
+  - Signalbehandling

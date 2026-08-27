@@ -1,0 +1,24 @@
+title: Platform upgrade for an existing cold rolling mill, AKA Dynamic
+client: Outokumpu stainless AB
+startDate: "2023-10"
+endDate: "2024-01"
+location: Västerås
+featured: true
+description: >
+  A small cog in the large machine, responsible for implementing a
+  customer-specific communication protocol based on TCP/IP, simulators, and
+  modifying a newer version of the heating model from FOCS with features from the
+  old Dynamic model. Objective: renew the old Dynamic system with long-term support
+  and enable the customer to switch fuel type from oil to gas. A very complex system
+  with many actors that sometimes created confusing situations; the system was also
+  old, meaning functionality had to be broken out and tested separately.
+tags:
+  - WPF
+  - TCP/IP
+  - Modellering
+  - C#
+  - Entity Framework
+  - C
+  - MVVM
+  - Simulators
+  - Fortran

@@ -1,0 +1,20 @@
+title: Consulting at ABB Robotics (base services, team gamma)
+client: ABB Robotics
+startDate: "2026-02"
+endDate: "2026-09"
+location: Västerås
+featured: false
+description: >
+  Part of a team at ABB Robotics responsible for maintaining and developing software
+  used to build, manage, and process installation packages for robot controllers. Also
+  contributed to support tooling for creating new add-ins and managing existing
+  installations.
+tags:
+  - WPF
+  - Testing
+  - C#
+  - SAFe
+  - Clean Architecture
+  - Azure Pipelines
+  - XML
+  - SDK utveckling

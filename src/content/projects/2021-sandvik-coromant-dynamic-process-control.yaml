@@ -1,0 +1,15 @@
+title: "Development of an overview application for monitoring robot cells: Dynamic Process Control"
+client: Sandvik Coromant
+startDate: "2021-04"
+endDate: "2021-10"
+location: Västerås
+featured: false
+description: >
+  A Proof of Concept (POC) application that displays the status of robot cells,
+  giving operators a good overview of the production line to monitor errors, tool
+  breakage, and switch between cells with a click of a button.
+tags:
+  - WPF
+  - Oracle
+  - MVVM
+  - Microsoft SQL

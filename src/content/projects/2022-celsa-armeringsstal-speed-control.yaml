@@ -1,0 +1,19 @@
+title: >-
+  Modernizing the speed control module for a new installation of FOCS
+  (Furnace Optimization Control System)
+client: Celsa Armeringsstål AS
+startDate: "2022-10"
+endDate: "2023-02"
+location: Västerås
+featured: false
+description: >
+  FOCS is a software where part of the code is written in Fortran, which is old and
+  hard to understand. The task was to remove the existing speed control module,
+  rewrite it in C#, and modernize it — moving it out of Fortran creates better
+  transparency and maintainability. The challenging part was separating the control
+  module from the existing Fortran code and integrating a better control flow.
+tags:
+  - C#
+  - Architecture
+  - Reglerteknik
+  - Fortran

@@ -1,0 +1,27 @@
+company: Prevas AB
+role: In-house developer and resource consultant
+startDate: "2019-08"
+endDate: Present
+location: Västerås
+description: >
+  Systems and software developer for test systems in laboratory and production
+  environments, delivering both hardware and software solutions. Developed automated
+  test and control applications using LabVIEW and TestStand, and applied MATLAB and C
+  for analysis and algorithm development. Progressed to C# development, contributing
+  to Prevas control products including Cell Manager (a control platform for advanced
+  robot cells) and FOCS (a fuel-optimization solution for reheating furnaces).
+  Practical experience integrating communication protocols including TCP/IP, OPC,
+  gRPC, HTTPS, RS-232, SPI, and CAN.
+tags:
+  - LabVIEW
+  - TestStand
+  - MATLAB
+  - C
+  - C#
+  - TCP/IP
+  - OPC/UA
+  - gRPC
+  - HTTPS
+  - RS-232
+  - SPI
+  - CAN

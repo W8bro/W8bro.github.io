@@ -1,0 +1,19 @@
+title: "Autobike: Automatic Bicycle"
+client: Mälardalens högskola
+startDate: "2018-09"
+endDate: "2019-01"
+location: Västerås
+featured: false
+description: >
+  As part of a project course, responsible for both the electronics system and the
+  control structure in developing a self-stabilizing bicycle — learning how to
+  develop a complete electronic system tailored to specific needs, and improving
+  the ability to collaborate effectively within a larger team.
+tags:
+  - LabVIEW
+  - Electronic design
+  - Sensor systems
+  - Reglerteknik
+  - Ultiboard
+  - IMU
+  - MSC ADAMS

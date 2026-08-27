@@ -1,0 +1,22 @@
+title: >-
+  Analysis and integration of a thermal camera, to get measurements from the
+  real world and enhance the accuracy of the FOCS system
+client: Celsa Global Steel Wire
+startDate: "2023-08"
+endDate: "2023-09"
+location: Västerås
+featured: true
+description: >
+  In steel furnaces, temperatures can reach over a thousand degrees, making them
+  difficult to monitor. The customer wanted a thermal camera to measure the
+  temperature of steel slabs, so the real temperature (not a soft sensor) could be
+  used to adapt the model. The measurement values from the thermal camera, as well
+  as the camera itself, were inaccurate — this led to a statistical analysis of the
+  measurements over time and an implementation of a data filtering algorithm.
+tags:
+  - SQL
+  - C#
+  - Statistics
+  - R
+  - Reglerteknik
+  - Fortran

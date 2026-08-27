@@ -1,18 +1,20 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Astro web page build and deploy
 
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false 
+  
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -25,12 +27,66 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: 'npm'
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run astro type check
+        run: npm run check
+
+      - name: Run astro build
+        run: npm run build
+        
+      # PDF gen  
+      - name: Install Playwright Chromium for PDF gen
+        run: npx playwright install --with-deps chromium
+
+      - name: Serve dist/
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          npx serve dist -l 8008 &
+          echo "SERVER_PID=$!" >> "$GITHUB_ENV"
+      
+      - name: Wait for server
+        run: npx wait-on http://localhost:8008
+
+      - name: Generate PDF
+        run: node scripts/generate-pdf.ts
+        env:
+          SERVE_SITE_URL: http://localhost:8008
+
+      - name: Stop serve server
+        if: always()
+        run: kill "$SERVER_PID" || true
+          
+      # prep deployment
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    needs: build 
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4

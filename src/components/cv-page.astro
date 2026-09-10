@@ -6,6 +6,8 @@ import { skills } from '../data/skills';
 import { links } from '../data/links';
 import { photos } from '../data/photos';
 
+import { Icon } from 'astro-icon/components';
+
 // Design: issue #10, variant C9 (photographic-editorial). Two things in the CSS below are
 // load-bearing and easy to break: the `font-variation-settings` on every Bodoni rule (the
 // optical-size axis, not just the weight, is what makes it legible) and the z-index on
@@ -36,12 +38,11 @@ const yr = (date: string) => date.slice(0, 4);
         </div>
 
         <header class="cv-nav">
-            <a class="is-on" href="#about">Tom</a>
+            <a class="is-on" href="#about"><Icon class="icon-large" name="ph:house-simple-fill" /></a>
             <a href="#experience">Experience</a>
             <a href="#projects">Projects</a>
             <a href="#skills">Skills</a>
             <a href="#papers">Education</a>
-            {links.length > 0 && <a href="#elsewhere">Elsewhere</a>}
             <span class="cv-glyph">≋</span>
         </header>
 
@@ -55,7 +56,7 @@ const yr = (date: string) => date.slice(0, 4);
         <aside class="cv-rail">
             <p>{about.bio}</p>
             <p>{projects.length} delivered systems across steel, robotics, medical and process industry — {experience.length} positions since 2013.</p>
-            <a class="cv-ghost" href="/cv.pdf">Download CV</a>
+            <a class="cv-ghost" href="/cv.pdf">Download<Icon class="icon-button" name="ph:cloud-arrow-down-light" /></a>
         </aside>
     </section>
 
@@ -256,7 +257,7 @@ const yr = (date: string) => date.slice(0, 4);
     /* ---------- hero ---------- */
     .cv-hero {
         position: relative;
-        min-height: min(96vh, 980px);
+        min-height: clamp(560px, 96vh, 980px);
         display: flex;
         overflow: hidden;
         color: var(--paper);

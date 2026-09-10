@@ -93,3 +93,25 @@ html {
 body {
   margin: 0;
 }
+
+[data-icon] {
+    display: inline-block;
+    vertical-align: -0.125em;
+    flex: none;
+}
+
+.icon-button {
+    vertical-align: -0.65em;
+    margin-left: 0.5em;
+    width: 1.6rem;
+    height:1.6rem;
+    stroke-width: 0.9;
+}
+
+.icon-large {
+    vertical-align: -0.65em;
+    width: 2rem;
+    height:2rem;
+    stroke-width: 0.9;
+}
+

@@ -1,137 +1,146 @@
 ---
-import { getCollection } from 'astro:content';
+// PROTOTYPE - throwaway. Variant C9: variant C8 plus one fix.
+// Same idiom and references as the whole C line (Images/nature-conservation-hero-01.png +
+// Images/wooden-cabin-booking.png). Earlier variants kept beside this one.
+//
+// THE FIX: "See work" used to wrap onto a second line and sit under the 2013 / Present /
+// 5 roles chips once the window got narrow. It now hides instead.
+//
+// Done with a CONTAINER query, not a media query, because the button should react to the
+// width of the panel it lives in rather than the width of the window - the split band is a
+// fraction of the viewport on desktop but goes full width below 960px, so a viewport
+// breakpoint would be wrong in one of those two states.
+//
+// The threshold is measured, not guessed. At 1440x900 the row needs:
+//     chips 272px + button 130px + three 0.6rem gaps 29px = 431px
+// of panel content-box width. Verified empirically by ramping the viewport 1600 -> 320 in
+// 10px steps: the row is fine at 435px of inner width and wraps at 425px (viewport 500 vs
+// 490). The query fires at 470px, which leaves ~39px of headroom so the button disappears
+// just BEFORE it would wrap rather than on the same frame, and absorbs any chip-width
+// change from a different webfont load.
+//
+// Nothing is lost by hiding it: "See work" points at #c9-projects, which the nav also
+// links to as "Projects", so the destination is still reachable at every width.
+import type { CVData } from './cv-data';
+const { data } = Astro.props as { data: CVData };
+const PHOTO = {
+    hero: 'https://picsum.photos/seed/w8bro-mill/1900/1200?grayscale',
+    split: 'https://picsum.photos/seed/w8bro-cell/1400/1600?grayscale',
+};
+const yr = (s: string) => s.slice(0, 4);
 
-import { about } from '../data/about';
-import { skills } from '../data/skills';
-import { links } from '../data/links';
-import { photos } from '../data/photos';
-
-// Design: issue #10, variant C9 (photographic-editorial). Two things in the CSS below are
-// load-bearing and easy to break: the `font-variation-settings` on every Bodoni rule (the
-// optical-size axis, not just the weight, is what makes it legible) and the z-index on
-// .cv-nav. Both are commented at their definitions.
-
-const experience = await getCollection('experience');
-experience.sort((a, b) => b.data.startDate.localeCompare(a.data.startDate));
-
-const projects = await getCollection('projects');
-projects.sort((a, b) => b.data.startDate.localeCompare(a.data.startDate));
-const featured = projects.filter((p) => p.data.featured);
-
-const education = await getCollection('education');
-education.sort((a, b) => b.data.startDate.localeCompare(a.data.startDate));
-
-const publications = await getCollection('publications');
-publications.sort((a, b) => b.data.year - a.data.year);
-
-/** "2019-08" -> "2019" */
-const yr = (date: string) => date.slice(0, 4);
+const LINKS: { where: string; title: string; note: string; url: string }[] = [
+    { where: 'Spotify', title: 'Bench playlist', note: 'What a test rig sounds like at 2am', url: 'https://open.spotify.com/' },
+    { where: 'Spotify', title: 'Control theory, the podcast', note: 'Long-form, occasionally about bicycles', url: 'https://open.spotify.com/' },
+    { where: 'GitHub', title: 'W8bro', note: 'This Site, and whatever else is half-finished', url: 'https://github.com/W8bro' },
+    { where: 'DiVA', title: 'Thesis, in full', note: 'Cascade control of a riderless bicycle', url: 'https://www.diva-portal.org/' },
+];
 ---
 
-<div class="cv">
+<div class="c9">
     <!-- HERO: full-bleed-single-image, one photograph carrying the whole frame. -->
-    <section class="cv-hero" id="about">
-        <div class="cv-photo cv-photo-hero">
-            {photos.hero.src && <img src={photos.hero.src} alt={photos.hero.alt} loading="eager" />}
+    <section class="c9-hero" id="c9-about">
+        <div class="c9-photo c9-photo-hero">
+            <img src={PHOTO.hero} alt="" loading="eager" />
         </div>
 
-        <header class="cv-nav">
-            <a class="is-on" href="#about">Tom</a>
-            <a href="#experience">Experience</a>
-            <a href="#projects">Projects</a>
-            <a href="#skills">Skills</a>
-            <a href="#papers">Education</a>
-            {links.length > 0 && <a href="#elsewhere">Elsewhere</a>}
-            <span class="cv-glyph">≋</span>
+        <header class="c9-nav">
+            <a class="is-on" href="#c9-about">Tom</a>
+            <a href="#c9-experience">Experience</a>
+            <a href="#c9-projects">Projects</a>
+            <a href="#c9-skills">Skills</a>
+            <a href="#c9-papers">Education</a>
+            <a href="#c9-elsewhere">Elsewhere</a>
+            <span class="c9-glyph">≋</span>
         </header>
 
         <!-- Nature: the wordmark rotated ninety degrees, climbing the left edge. -->
-        <div class="cv-margin">
-            <span class="cv-kicker">Systems by</span>
-            <span class="cv-word">ANDERSSON</span>
+        <div class="c9-margin">
+            <span class="c9-kicker">Systems by</span>
+            <span class="c9-word">ANDERSSON</span>
         </div>
 
         <!-- Nature: a narrow right-hand rail, hairline-divided, right-aligned. -->
-        <aside class="cv-rail">
-            <p>{about.bio}</p>
-            <p>{projects.length} delivered systems across steel, robotics, medical and process industry — {experience.length} positions since 2013.</p>
-            <a class="cv-ghost" href="/cv.pdf">Download CV</a>
+        <aside class="c9-rail">
+            <p>{data.about.bio}</p>
+            <p>{data.projects.length} delivered systems across steel, robotics, medical and process industry — {data.experience.length} positions since 2013.</p>
+            <a class="c9-ghost" href="#">Download CV</a>
         </aside>
     </section>
 
     <!-- Wooden: the split band. Photograph left with an enormous tight-tracked light
          grotesque headline; charcoal listing panel right. -->
-    <section class="cv-split" id="experience">
-        <div class="cv-split-l">
-            <div class="cv-photo cv-photo-split">
-                {photos.split.src && <img src={photos.split.src} alt={photos.split.alt} loading="lazy" />}
+    <section class="c9-split" id="c9-experience">
+        <div class="c9-split-l">
+            <div class="c9-photo c9-photo-split">
+                <img src={PHOTO.split} alt="" loading="lazy" />
             </div>
-            <h2 class="cv-huge">BUILT FOR<br />HEAVY<br />INDUSTRY</h2>
-            <p class="cv-sub"><span class="cv-glyph">≋</span> Test systems, control software and robot cell platforms that run on a factory floor</p>
-            <div class="cv-inputs">
+            <h2 class="c9-huge">BUILT FOR<br />HEAVY<br />INDUSTRY</h2>
+            <p class="c9-sub"><span class="c9-glyph">≋</span> Test systems, control software and robot cell platforms that run on a factory floor</p>
+            <div class="c9-inputs">
                 <span>2013</span>
                 <span>Present</span>
-                <span>{experience.length} roles</span>
-                <a class="cv-square" href="#projects">See work <span>&#8594;</span></a>
+                <span>{data.experience.length} roles</span>
+                <a class="c9-square" href="#c9-projects">See work <span>&#8594;</span></a>
             </div>
         </div>
-        <div class="cv-split-r">
-            <div class="cv-panel-head">
+        <div class="c9-split-r">
+            <div class="c9-panel-head">
                 <h3>EVERY CHAPTER<br />OF THE WORK</h3>
-                <span class="cv-count">{experience.length}</span>
+                <span class="c9-count">{data.experience.length}</span>
             </div>
-            <div class="cv-roles">
-                {experience.map((e) => (
-                    <article class="cv-role">
+            <div class="c9-roles">
+                {data.experience.map((e) => (
+                    <article class="c9-role">
                         <h4>{e.data.company}</h4>
-                        <p class="cv-role-meta">{e.data.role}</p>
-                        <p class="cv-role-meta">{yr(e.data.startDate)} — {e.data.endDate} · {e.data.location}</p>
+                        <p class="c9-role-meta">{e.data.role}</p>
+                        <p class="c9-role-meta">{yr(e.data.startDate)} — {e.data.endDate} · {e.data.location}</p>
                     </article>
                 ))}
             </div>
         </div>
     </section>
 
-    <section class="cv-band" id="projects">
-        <div class="cv-band-head">
+    <section class="c9-band" id="c9-projects">
+        <div class="c9-band-head">
             <h2>Selected work</h2>
-            <div class="cv-tabs">
-                <button type="button" class="is-on" data-tab="featured">Cherry picks</button>
-                <button type="button" data-tab="all">All {projects.length}</button>
+            <div class="c9-tabs">
+                <button type="button" class="is-on" data-c9-tab="f">Cherry picks</button>
+                <button type="button" data-c9-tab="all">All {data.projects.length}</button>
             </div>
         </div>
-        <div class="cv-stack">
-            <div data-panel="featured">
-                {featured.map((p) => (
-                    <article class="cv-proj">
-                        <span class="cv-year">{yr(p.data.startDate)}</span>
+        <div class="c9-stack">
+            <div data-c9-panel="f">
+                {data.featured.map((p) => (
+                    <article class="c9-proj">
+                        <span class="c9-year">{yr(p.data.startDate)}</span>
                         <div>
                             <h3>{p.data.title}</h3>
                             <p>{p.data.client} · {p.data.location}</p>
                         </div>
-                        <span class="cv-tag">{p.data.tags[0]}</span>
+                        <span class="c9-tag">{p.data.tags[0]}</span>
                     </article>
                 ))}
             </div>
-            <div data-panel="all" hidden>
-                {projects.map((p) => (
-                    <article class="cv-proj">
-                        <span class="cv-year">{yr(p.data.startDate)}</span>
+            <div data-c9-panel="all" hidden>
+                {data.projects.map((p) => (
+                    <article class="c9-proj">
+                        <span class="c9-year">{yr(p.data.startDate)}</span>
                         <div>
                             <h3>{p.data.title}</h3>
                             <p>{p.data.client} · {p.data.location}</p>
                         </div>
-                        <span class="cv-tag">{p.data.tags[0]}</span>
+                        <span class="c9-tag">{p.data.tags[0]}</span>
                     </article>
                 ))}
             </div>
         </div>
     </section>
 
-    <section class="cv-band cv-band-alt" id="skills">
-        <div class="cv-band-head"><h2>Capability</h2></div>
-        <dl class="cv-skills">
-            {skills.map((c) => (
+    <section class="c9-band c9-band-alt" id="c9-skills">
+        <div class="c9-band-head"><h2>Capability</h2></div>
+        <dl class="c9-skills">
+            {data.skills.map((c) => (
                 <div>
                     <dt>{c.category}</dt>
                     <dd>{c.items.join(' · ')}</dd>
@@ -140,12 +149,12 @@ const yr = (date: string) => date.slice(0, 4);
         </dl>
     </section>
 
-    <section class="cv-band cv-two" id="papers">
+    <section class="c9-band c9-two" id="c9-papers">
         <div>
-            <div class="cv-band-head"><h2>Education</h2></div>
-            {education.map((e) => (
-                <article class="cv-proj cv-proj-tight">
-                    <span class="cv-year">{yr(e.data.endDate)}</span>
+            <div class="c9-band-head"><h2>Education</h2></div>
+            {data.education.map((e) => (
+                <article class="c9-proj c9-proj-tight">
+                    <span class="c9-year">{yr(e.data.endDate)}</span>
                     <div>
                         <h3>{e.data.institution}</h3>
                         <p>{e.data.degree}, {e.data.field}</p>
@@ -154,10 +163,10 @@ const yr = (date: string) => date.slice(0, 4);
             ))}
         </div>
         <div>
-            <div class="cv-band-head"><h2>Published</h2></div>
-            {publications.map((p) => (
-                <a class="cv-proj cv-proj-tight" href={p.data.url}>
-                    <span class="cv-year">{p.data.year}</span>
+            <div class="c9-band-head"><h2>Published</h2></div>
+            {data.publications.map((p) => (
+                <a class="c9-proj c9-proj-tight" href={p.data.url}>
+                    <span class="c9-year">{p.data.year}</span>
                     <div>
                         <h3>{p.data.title}</h3>
                         <p>{p.data.venue} ↗</p>
@@ -167,77 +176,78 @@ const yr = (date: string) => date.slice(0, 4);
         </div>
     </section>
 
-    {
-        links.length > 0 && (
-            <section class="cv-band cv-band-alt" id="elsewhere">
-                <div class="cv-band-head">
-                    <h2>Elsewhere</h2>
-                    <span class="cv-tag">{links.length} {links.length === 1 ? 'link' : 'links'}</span>
-                </div>
-                <div>
-                    {links.map((l) => (
-                        <a class="cv-proj cv-link" href={l.url}>
-                            <span class="cv-where">{l.where}</span>
-                            <div>
-                                <h3>{l.title}</h3>
-                                <p>{l.note}</p>
-                            </div>
-                            <span class="cv-tag cv-arrow">↗</span>
-                        </a>
-                    ))}
-                </div>
-            </section>
-        )
-    }
+    <section class="c9-band c9-band-alt" id="c9-elsewhere">
+        <div class="c9-band-head">
+            <h2>Elsewhere</h2>
+            <span class="c9-tag">{LINKS.length} links</span>
+        </div>
+        <div>
+            {LINKS.map((l) => (
+                <a class="c9-proj c9-link" href={l.url}>
+                    <span class="c9-where">{l.where}</span>
+                    <div>
+                        <h3>{l.title}</h3>
+                        <p>{l.note}</p>
+                    </div>
+                    <span class="c9-tag c9-arrow">↗</span>
+                </a>
+            ))}
+        </div>
+    </section>
 
-    <footer class="cv-foot">
+    <footer class="c9-foot">
         <span>W8BRO.GITHUB.IO</span>
         <span>Bodoni Moda 600–700, opsz pinned / Inter</span>
     </footer>
 </div>
 
 <style>
-    .cv {
-        /* colour tokens come from src/styles/global.css */
+    .c9 {
+        --paper: #fbf7f1;
+        --ink: #22201d;
+        --terra: #c56a4c;
+        /* the reference sets its rotated wordmark in a LIGHT salmon, because the ground
+           behind it is dark */
+        --terra-lift: #e58f6a;
+        --earth: #47361a;
         background: var(--paper);
         color: var(--ink);
         font-family: Inter, system-ui, sans-serif;
         -webkit-font-smoothing: antialiased;
     }
 
-    /* Every photograph is duotoned into the earth/gold range in CSS, so source images
-       can be plain frames — see src/data/photos.ts. */
-    /* Reveal on scroll. Scoped to .reveal-ready, a class only the script adds, so with
-       JS off nothing is ever hidden. Uses the independent `translate` property rather than
-       `transform`, because the rotated wordmark already owns `transform: rotate(180deg)`
-       and animating transform would flatten it. Print overrides live at the bottom. */
-    .cv.reveal-ready [data-reveal] {
+    /* Every photograph is pulled grayscale and duotoned into the earth range: the
+       collection renders nature (and, here, industry) in earth and gold. */
+    /* Reveal on scroll. Scoped to .reveal-ready, which only the script adds, so nothing
+       is hidden if JS never runs. `translate` is used instead of `transform` so the
+       rotated wordmark keeps its own rotation. */
+    .c9.reveal-ready [data-reveal] {
         opacity: 0;
         translate: 0 14px;
         transition:
             opacity 0.75s cubic-bezier(0.2, 0.6, 0.2, 1),
             translate 0.75s cubic-bezier(0.2, 0.6, 0.2, 1);
     }
-    .cv.reveal-ready [data-reveal].is-in {
+    .c9.reveal-ready [data-reveal].is-in {
         opacity: 1;
         translate: none;
     }
     @media (prefers-reduced-motion: reduce) {
-        .cv.reveal-ready [data-reveal],
-        .cv.reveal-ready [data-reveal].is-in {
+        .c9.reveal-ready [data-reveal],
+        .c9.reveal-ready [data-reveal].is-in {
             opacity: 1;
             translate: none;
             transition: none;
         }
     }
 
-    .cv-photo {
+    .c9-photo {
         position: relative;
         isolation: isolate;
         overflow: hidden;
         background: linear-gradient(150deg, #6e5a34 0%, #8a6b3e 34%, #46381f 74%, #2a2114 100%);
     }
-    .cv-photo img {
+    .c9-photo img {
         display: block;
         width: 100%;
         height: 100%;
@@ -246,7 +256,7 @@ const yr = (date: string) => date.slice(0, 4);
         opacity: 0.95;
     }
     /* the fade that keeps overlaid text legible */
-    .cv-photo::after {
+    .c9-photo::after {
         content: "";
         position: absolute;
         inset: 0;
@@ -254,21 +264,22 @@ const yr = (date: string) => date.slice(0, 4);
     }
 
     /* ---------- hero ---------- */
-    .cv-hero {
+    .c9-hero {
         position: relative;
         min-height: min(96vh, 980px);
         display: flex;
         overflow: hidden;
         color: var(--paper);
     }
-    .cv-photo-hero {
+    .c9-photo-hero {
         position: absolute;
         inset: 0;
         z-index: 0;
     }
-    /* An even, deeper grade across the whole frame rather than a fade down one edge: a
-       one-sided scrim covered the top-left nav links. */
-    .cv-photo-hero::after {
+    /* An EVEN deeper grade across the whole frame, rather than a fade down one edge.
+       The reference's hero is a dark warm jungle; this gets the same ground without
+       putting a panel over the navigation. */
+    .c9-photo-hero::after {
         background: linear-gradient(
             176deg,
             rgba(38, 28, 16, 0.6) 0%,
@@ -277,11 +288,11 @@ const yr = (date: string) => date.slice(0, 4);
             rgba(38, 28, 16, 0.66) 100%
         );
     }
-    .cv-nav {
+    .c9-nav {
         position: absolute;
-        /* Must stay above .cv-margin. That poster-margin column is full height and comes
-           later in the DOM, so at equal z-index it swallows clicks on the nav links.
-           Do not lower this. */
+        /* above .c9-margin: the poster margin is a full-height column that comes later in
+           the DOM, so at equal z-index it was swallowing clicks on the nav links. The dark
+           fade only made an existing hit-testing bug visible. */
         z-index: 4;
         top: clamp(1.2rem, 3vw, 2.4rem);
         left: clamp(1.2rem, 3vw, 2.6rem);
@@ -292,35 +303,35 @@ const yr = (date: string) => date.slice(0, 4);
         font-size: 1.02rem;
         font-weight: 400;
     }
-    .cv-nav a {
+    .c9-nav a {
         color: var(--paper);
         text-decoration: none;
     }
-    .cv-nav a.is-on {
+    .c9-nav a.is-on {
         color: var(--terra-lift);
         border-bottom: 1px solid var(--terra-lift);
     }
-    .cv-glyph {
+    .c9-glyph {
         margin-left: auto;
         font-size: 1.4rem;
         color: var(--terra-lift);
     }
 
     /* Nature's poster margin. */
-    .cv-margin {
+    .c9-margin {
         position: relative;
         z-index: 2;
         isolation: isolate;
-            /* nothing here is interactive, so it must never take a click */
+        /* nothing in the poster margin is interactive, so it should never take a click */
         pointer-events: none;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-            /* clear the nav: the margin climbs the edge, it does not run over it */
+        /* clear the nav: the poster margin climbs the edge, it does not run over it */
         padding: clamp(5rem, 9vw, 8rem) 0 clamp(1.4rem, 4vw, 3rem) clamp(1.2rem, 3vw, 2.6rem);
         min-width: 0;
     }
-    .cv-kicker {
+    .c9-kicker {
         font-family: "Bodoni Moda", Georgia, serif;
         font-weight: 600;
         font-variation-settings: "opsz" 16;
@@ -329,17 +340,17 @@ const yr = (date: string) => date.slice(0, 4);
         max-width: 7ch;
         margin-bottom: 0.7rem;
     }
-    .cv-word {
+    .c9-word {
         writing-mode: vertical-rl;
         transform: rotate(180deg);
         font-family: "Bodoni Moda", Georgia, serif;
         font-weight: 700;
- 
+        /* the margin has to hold all nine letters at any viewport height, so the
+           wordmark is sized off the height, not the width */
         font-size: clamp(2rem, min(5.4vw, 6.6vh), 5.4rem);
         line-height: 0.9;
-        /* Bodoni Moda is a didone: its opsz axis picks a hairline display cut at large
-           sizes, which is illegible rotated. Pinning opsz low forces the sturdier text
-           cut. Keep both this and the weight — dropping either brings the hairlines back. */
+        /* the whole point: heavier stems, and opsz pinned low so Bodoni renders its text
+           design rather than the hairline display design it defaults to at this size */
         font-weight: 700;
         font-variation-settings: "opsz" 14, "wght" 700;
         letter-spacing: 0.035em;
@@ -347,7 +358,7 @@ const yr = (date: string) => date.slice(0, 4);
     }
 
     /* Nature's right-hand rail. */
-    .cv-rail {
+    .c9-rail {
         position: relative;
         z-index: 2;
         margin: auto 0 clamp(1.4rem, 4vw, 3rem) auto;
@@ -359,7 +370,7 @@ const yr = (date: string) => date.slice(0, 4);
         align-items: flex-end;
         gap: 1.1rem;
     }
-    .cv-rail p {
+    .c9-rail p {
         margin: 0;
         padding-bottom: 1.1rem;
         border-bottom: 1px solid rgba(251, 247, 241, 0.35);
@@ -367,7 +378,7 @@ const yr = (date: string) => date.slice(0, 4);
         font-weight: 300;
         line-height: 1.55;
     }
-    .cv-ghost {
+    .c9-ghost {
         border: 1px solid rgba(251, 247, 241, 0.55);
         border-radius: 999px;
         padding: 0.62rem 1.3rem;
@@ -375,19 +386,19 @@ const yr = (date: string) => date.slice(0, 4);
         color: var(--paper);
         text-decoration: none;
     }
-    .cv-ghost:hover {
+    .c9-ghost:hover {
         background: rgba(251, 247, 241, 0.14);
     }
 
     /* ---------- Wooden split ---------- */
-    .cv-split {
+    .c9-split {
         display: grid;
         grid-template-columns: 1fr minmax(320px, 38%);
         gap: 10px;
         padding: 10px;
         background: #100f0d;
     }
-    .cv-split-l {
+    .c9-split-l {
         /* query container for the chip row below; see the note at the top of this file */
         container-type: inline-size;
         container-name: panel;
@@ -400,13 +411,13 @@ const yr = (date: string) => date.slice(0, 4);
         flex-direction: column;
         color: var(--paper);
     }
-    .cv-photo-split {
+    .c9-photo-split {
         position: absolute;
         inset: 0;
         z-index: 0;
         border-radius: 20px;
     }
-    .cv-huge {
+    .c9-huge {
         position: relative;
         z-index: 1;
         margin: 0;
@@ -415,7 +426,7 @@ const yr = (date: string) => date.slice(0, 4);
         line-height: 0.94;
         letter-spacing: -0.045em;
     }
-    .cv-sub {
+    .c9-sub {
         position: relative;
         z-index: 1;
         margin: auto 0 1.4rem;
@@ -428,7 +439,7 @@ const yr = (date: string) => date.slice(0, 4);
     }
     /* Wooden: frosted-glass inputs floating over the photograph beside a hard white
        square button. */
-    .cv-inputs {
+    .c9-inputs {
         position: relative;
         z-index: 1;
         display: flex;
@@ -436,8 +447,8 @@ const yr = (date: string) => date.slice(0, 4);
         gap: 0.6rem;
         align-items: stretch;
     }
-    /* Direct children only — the arrow inside .cv-square is a span too. */
-    .cv-inputs > span {
+    /* direct children only: the arrow inside .c9-square is a span too */
+    .c9-inputs > span {
         border-radius: 10px;
         padding: 0.95rem 1.5rem;
         background: rgba(251, 247, 241, 0.12);
@@ -446,9 +457,9 @@ const yr = (date: string) => date.slice(0, 4);
         box-shadow: inset 0 0 0 1px rgba(251, 247, 241, 0.18);
         font-size: 0.88rem;
     }
-    /* Frosted glass matching the chips beside it, kept distinct by a brighter hairline
-       and an arrow rather than by a block of white. */
-    .cv-square {
+    /* was a hard white slab; now the same frosted glass as the chips beside it, kept
+       distinct by a brighter hairline and an arrow rather than by a block of white */
+    .c9-square {
         margin-left: auto;
         display: inline-flex;
         align-items: center;
@@ -467,58 +478,56 @@ const yr = (date: string) => date.slice(0, 4);
             background 0.3s ease,
             box-shadow 0.3s ease;
     }
-    .cv-square span {
+    .c9-square span {
         color: var(--terra-lift);
         transition: translate 0.3s ease;
     }
-    .cv-square:hover {
+    .c9-square:hover {
         background: rgba(251, 247, 241, 0.27);
         box-shadow: inset 0 0 0 1px rgba(251, 247, 241, 0.7);
     }
-    .cv-square:hover span {
+    .c9-square:hover span {
         translate: 3px 0;
     }
 
-    /* Measured: chips 272px + button 130px + three 0.6rem gaps 29px = 431px of panel
-       content box. Hidden at 470px so the button goes just before it would wrap under the
-       chips rather than on the same frame. Re-measure if the chip labels or the typeface
-       change. Container query, not a media query: the panel is a fraction of the viewport
-       on desktop but full width below 960px. */
+    /* Measured: the chips + button + gaps need 431px of panel content box. Hide at 470px
+       so the button goes just before it would wrap under the chips, never on top of them. */
     @container panel (max-width: 470px) {
-        .cv-square {
+        .c9-square {
             display: none;
         }
     }
-    /* Fallback for engines without container queries. */
+    /* Fallback for engines without container queries: the panel is full width below the
+       960px split breakpoint, so viewport width tracks panel width closely there. */
     @supports not (container-type: inline-size) {
         @media (max-width: 535px) {
-            .cv-square {
+            .c9-square {
                 display: none;
             }
         }
     }
 
-    .cv-split-r {
+    .c9-split-r {
         border-radius: 20px;
-        background: var(--charcoal);
+        background: #1a1917;
         color: var(--paper);
         padding: clamp(1.4rem, 3vw, 2.4rem);
         display: flex;
         flex-direction: column;
     }
-    .cv-panel-head {
+    .c9-panel-head {
         display: flex;
         align-items: flex-start;
         gap: 1rem;
     }
-    .cv-panel-head h3 {
+    .c9-panel-head h3 {
         margin: 0;
         font-size: clamp(1.05rem, 1.5vw, 1.3rem);
         font-weight: 400;
         letter-spacing: -0.01em;
         line-height: 1.2;
     }
-    .cv-count {
+    .c9-count {
         margin-left: auto;
         font-family: "Bodoni Moda", Georgia, serif;
         font-weight: 600;
@@ -527,20 +536,20 @@ const yr = (date: string) => date.slice(0, 4);
         color: rgba(251, 247, 241, 0.5);
         line-height: 1;
     }
-
-    .cv-roles {
+    /* every role listed, rather than one at a time behind arrows */
+    .c9-roles {
         margin-top: 1.6rem;
         display: flex;
         flex-direction: column;
     }
-    .cv-role {
+    .c9-role {
         padding: 0.95rem 0;
         border-top: 1px solid rgba(251, 247, 241, 0.16);
     }
-    .cv-role:last-child {
+    .c9-role:last-child {
         border-bottom: 1px solid rgba(251, 247, 241, 0.16);
     }
-    .cv-role h4 {
+    .c9-role h4 {
         margin: 0;
         font-family: "Bodoni Moda", Georgia, serif;
         font-size: clamp(1.15rem, 1.7vw, 1.45rem);
@@ -548,7 +557,7 @@ const yr = (date: string) => date.slice(0, 4);
         font-variation-settings: "opsz" 16;
         letter-spacing: -0.005em;
     }
-    .cv-role-meta {
+    .c9-role-meta {
         margin: 0.2rem 0 0;
         font-size: 0.86rem;
         font-weight: 300;
@@ -556,16 +565,16 @@ const yr = (date: string) => date.slice(0, 4);
     }
 
     /* ---------- bands ---------- */
-    .cv-band {
+    .c9-band {
         padding: clamp(3.4rem, 8vw, 7rem) clamp(1.2rem, 4vw, 4.5rem);
         max-width: 1500px;
         margin: 0 auto;
     }
-    .cv-band-alt {
-        background: var(--paper-alt);
+    .c9-band-alt {
+        background: #f2ece2;
         max-width: none;
     }
-    .cv-band-head {
+    .c9-band-head {
         display: flex;
         align-items: baseline;
         justify-content: space-between;
@@ -574,7 +583,7 @@ const yr = (date: string) => date.slice(0, 4);
         padding-bottom: 1rem;
         border-bottom: 1px solid rgba(34, 32, 29, 0.2);
     }
-    .cv-band-head h2 {
+    .c9-band-head h2 {
         margin: 0;
         font-family: "Bodoni Moda", Georgia, serif;
         font-size: clamp(1.9rem, 4.4vw, 3.4rem);
@@ -582,11 +591,11 @@ const yr = (date: string) => date.slice(0, 4);
         font-variation-settings: "opsz" 18, "wght" 700;
         letter-spacing: -0.012em;
     }
-    .cv-tabs {
+    .c9-tabs {
         display: flex;
         gap: 1.3rem;
     }
-    .cv-tabs button {
+    .c9-tabs button {
         border: 0;
         background: transparent;
         font: inherit;
@@ -596,21 +605,21 @@ const yr = (date: string) => date.slice(0, 4);
         border-bottom: 1px solid transparent;
         cursor: pointer;
     }
-    .cv-tabs button.is-on {
+    .c9-tabs button.is-on {
         color: var(--terra);
         border-bottom-color: var(--terra);
     }
 
-    .cv-stack {
+    .c9-stack {
         display: grid;
     }
-    .cv-stack > * {
+    .c9-stack > * {
         grid-area: 1 / 1;
     }
-    .cv-stack > [hidden] {
+    .c9-stack > [hidden] {
         display: none;
     }
-    .cv-proj {
+    .c9-proj {
         display: grid;
         grid-template-columns: 6ch 1fr auto;
         gap: 1.6rem;
@@ -620,38 +629,38 @@ const yr = (date: string) => date.slice(0, 4);
         text-decoration: none;
         color: inherit;
     }
-    .cv-proj-tight {
+    .c9-proj-tight {
         grid-template-columns: 6ch 1fr;
     }
-    .cv-year {
+    .c9-year {
         font-family: "Bodoni Moda", Georgia, serif;
         font-size: 1.05rem;
         font-weight: 600;
         font-variation-settings: "opsz" 8;
-        color: var(--terra-deep);
+        color: #a8543a;
     }
-    .cv-proj h3 {
+    .c9-proj h3 {
         margin: 0;
         max-width: 62ch;
         font-family: "Bodoni Moda", Georgia, serif;
         font-size: clamp(1.14rem, 2vw, 1.62rem);
         font-weight: 600;
-        /* opsz 8 is the text extreme of the optical-size axis — the sturdiest, most open
-           cut. At body scale in a long list this matters more than weight does. */
+        /* opsz 8 is the text extreme of Bodoni Moda's optical-size axis: the sturdiest,
+           most open cut it has. In a 23-item list that matters more than weight does. */
         font-variation-settings: "opsz" 8, "wght" 600;
         letter-spacing: -0.002em;
         line-height: 1.28;
     }
-    .cv-proj p {
+    .c9-proj p {
         margin: 0.34rem 0 0;
         font-size: 0.88rem;
         font-weight: 400;
         color: rgba(34, 32, 29, 0.8);
     }
-    .cv-proj:hover h3 {
+    .c9-proj:hover h3 {
         color: var(--terra);
     }
-    .cv-tag {
+    .c9-tag {
         font-size: 0.7rem;
         font-weight: 500;
         letter-spacing: 0.1em;
@@ -660,55 +669,55 @@ const yr = (date: string) => date.slice(0, 4);
         white-space: nowrap;
     }
 
-    /* Elsewhere reuses the assignment-row idiom so the band reads as native. */
-    .cv-where {
+    /* the Elsewhere rows reuse the assignment-row idiom so the band reads as native */
+    .c9-where {
         font-family: "Bodoni Moda", Georgia, serif;
         font-size: 1.02rem;
         font-weight: 600;
         font-variation-settings: "opsz" 8;
-        color: var(--terra-deep);
+        color: #a8543a;
     }
-    .cv-link:hover h3 {
+    .c9-link:hover h3 {
         color: var(--terra);
     }
-    .cv-arrow {
+    .c9-arrow {
         font-size: 0.95rem;
         letter-spacing: 0;
     }
 
-    .cv-skills {
+    .c9-skills {
         margin: 0;
         max-width: 1500px;
     }
-    .cv-skills > div {
+    .c9-skills > div {
         display: grid;
         grid-template-columns: minmax(160px, 22%) 1fr;
         gap: 1.6rem;
         padding: 1.3rem 0;
         border-bottom: 1px solid rgba(34, 32, 29, 0.13);
     }
-    .cv-skills dt {
+    .c9-skills dt {
         font-family: "Bodoni Moda", Georgia, serif;
         font-size: 1.3rem;
         font-weight: 700;
-        /* body scale, so the same text cut the assignment list needs */
+        /* body scale, so the same text cut the assignment list needed */
         font-variation-settings: "opsz" 8, "wght" 700;
         letter-spacing: -0.002em;
         line-height: 1.25;
     }
-    .cv-skills dd {
+    .c9-skills dd {
         margin: 0;
         font-weight: 400;
         line-height: 1.7;
         color: rgba(34, 32, 29, 0.86);
     }
 
-    .cv-two {
+    .c9-two {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: clamp(1.6rem, 5vw, 4.5rem);
     }
-    .cv-foot {
+    .c9-foot {
         display: flex;
         justify-content: space-between;
         gap: 1rem;
@@ -721,98 +730,44 @@ const yr = (date: string) => date.slice(0, 4);
     }
 
     @media (max-width: 950px) {
-        .cv-split,
-        .cv-two,
-        .cv-skills > div {
+        .c9-split,
+        .c9-two,
+        .c9-skills > div {
             grid-template-columns: 1fr;
         }
-        .cv-rail {
+        .c9-rail {
             display: none;
         }
-        .cv-word {
+        .c9-word {
             font-size: clamp(2.6rem, 15vw, 5rem);
         }
-        .cv-proj {
+        .c9-proj {
             grid-template-columns: 5ch 1fr;
         }
-        .cv-tag {
+        .c9-tag {
             display: none;
         }
-    }
-
-    /* ------------------------------------------------------------------
-       PRINT / PDF. The Pipeline generates dist/cv.pdf by loading this page
-       in headless Chromium and calling page.pdf(), which does NOT scroll.
-       Without the first rule below every revealed element would still be at
-       opacity 0 and the PDF would come out blank.
-       ------------------------------------------------------------------ */
-    @media print {
-        .cv.reveal-ready [data-reveal],
-        .cv.reveal-ready [data-reveal].is-in {
-            opacity: 1 !important;
-            translate: none !important;
-            transition: none !important;
-        }
-
-        /* screen-only affordances */
-        .cv-nav,
-        .cv-ghost,
-        .cv-square,
-        .cv-tabs,
-        .cv-glyph {
-            display: none !important;
-        }
-
-        /* the hero is a cover page; everything after it flows as documents do */
-        .cv-hero {
-            min-height: auto;
-            page-break-after: always;
-            break-after: page;
-        }
-        .cv-split {
-            grid-template-columns: 1fr;
-        }
-        .cv-split-l {
-            min-height: 22rem;
-        }
-
-        /* a row should not be split across two pages */
-        .cv-proj,
-        .cv-role,
-        .cv-skills > div {
-            page-break-inside: avoid;
-            break-inside: avoid;
-        }
-        .cv-band-head {
-            page-break-after: avoid;
-            break-after: avoid;
-        }
-
-        /* NB: the projects tabs are switched by scripts/generate-pdf.ts, not here.
-           Tailwind preflight ships [hidden]{display:none!important} inside @layer base,
-           and a layered !important beats an unlayered one, so a rule here could not win
-           against the hidden attribute. See that script for the detail. */
     }
 </style>
 
 <script>
     // ---------- reveal on scroll ----------
-    const root = document.querySelector<HTMLElement>(".cv");
+    const root = document.querySelector<HTMLElement>(".c9");
 
     if (root) {
         const REVEAL = [
-            ".cv-kicker",
-            ".cv-word",
-            ".cv-rail > *",
-            ".cv-huge",
-            ".cv-sub",
-            ".cv-inputs",
-            ".cv-panel-head",
-            ".cv-role",
-            ".cv-band-head",
-            ".cv-proj",
-            ".cv-skills > div",
-            ".cv-foot > *",
+            ".c9-kicker",
+            ".c9-word",
+            ".c9-rail > *",
+            ".c9-huge",
+            ".c9-sub",
+            ".c9-inputs",
+            ".c9-panel-head",
+            ".c9-role",
+            ".c9-band-head",
+            ".c9-proj",
+            ".c9-skills > div",
+            ".c9-foot > *",
         ].join(", ");
 
         const targets = [...root.querySelectorAll<HTMLElement>(REVEAL)];
@@ -875,12 +830,12 @@ const yr = (date: string) => date.slice(0, 4);
         else window.addEventListener("load", () => requestAnimationFrame(revealTail));
     }
 
-    const tabs = document.querySelectorAll<HTMLButtonElement>("[data-tab]");
-    const panels = document.querySelectorAll<HTMLElement>("[data-panel]");
+    const tabs = document.querySelectorAll<HTMLButtonElement>("[data-c9-tab]");
+    const panels = document.querySelectorAll<HTMLElement>("[data-c9-panel]");
     tabs.forEach((t) =>
         t.addEventListener("click", () => {
             tabs.forEach((o) => o.classList.toggle("is-on", o === t));
-            panels.forEach((p) => (p.hidden = p.dataset.panel !== t.dataset.tab));
+            panels.forEach((p) => (p.hidden = p.dataset.c9Panel !== t.dataset.c9Tab));
             panels.forEach((p) => {
                 if (p.hidden) return;
                 p.querySelectorAll("[data-reveal]").forEach((el) => el.classList.add("is-in"));

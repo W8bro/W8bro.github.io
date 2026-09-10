@@ -10,7 +10,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check"
+    "check": "astro check",
+    "check:fonts": "node scripts/check-font-axes.mjs",
+    "verify:fonts": "node scripts/verify-fonts.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

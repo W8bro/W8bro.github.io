@@ -38,7 +38,7 @@ const yr = (date: string) => date.slice(0, 4);
         </div>
 
         <header class="cv-nav">
-            <a class="is-on" href="#about"><Icon class="icon-large" name="ph:house-simple-fill" /></a>
+            <a class="is-on" href="#about"><Icon class="icon-large" name="ph:house-simple-bold" /></a>
             <a href="#experience">Experience</a>
             <a href="#projects">Projects</a>
             <a href="#skills">Skills</a>
@@ -738,6 +738,16 @@ const yr = (date: string) => date.slice(0, 4);
         }
         .cv-tag {
             display: none;
+        }
+    }
+
+    @media (max-height: 480px){
+        .cv-hero{
+            min-height: 100vh;
+        }
+        .cv-word {
+            writing-mode:horizontal-tb
+            font-size: clamp(1.8rem, 7vh, 2.8rem)
         }
     }
 

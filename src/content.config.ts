@@ -7,7 +7,7 @@ const educationCollection = defineCollection({
     schema: z.object({
         institution: z.string(),
         degree: z.string(),
-        field: z.string(),
+        field: z.string().optional(),
         startDate: z.string(),
         endDate: z.string(),
         description: z.string().optional(),

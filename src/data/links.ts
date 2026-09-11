@@ -16,8 +16,20 @@ export interface Link {
 export const links: Link[] = [
   {
     where: 'GitHub',
-    title: 'W8bro',
-    note: 'This site, and whatever else is half-finished',
+    title: 'Tom Andersson (W8bro)',
+    note: 'My Github Profile',
     url: 'https://github.com/W8bro',
   },
+  {
+    where: 'Spotify',
+    title: 'Feed me to the waves',
+    note: 'Spotify link to Feed me to the waves',
+    url: 'https://open.spotify.com/artist/3m84oWj5JZhlWwoypldba2?si=x2alSq7CSbynJj6tXYKczQ',
+  },
+  {
+    where: 'Spotify',
+    title: 'E 321',
+    note: 'Spotify link to E321',
+    url: 'https://open.spotify.com/artist/4iJPYMoMRr2VzHj3MOaW5E?si=3UMJigiMT9aEMJNJf0s1uw',
+  }
 ];

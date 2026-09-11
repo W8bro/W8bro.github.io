@@ -93,12 +93,12 @@ const yr = (date: string) => date.slice(0, 4);
                 <span>2013</span>
                 <span>Present</span>
                 <span>{experience.length} roles</span>
-                <a class="cv-square" href="#projects">See work <span>&#8594;</span></a>
+                <a class="cv-square" href="#projects">See Projects <span>&#8594;</span></a>
             </div>
         </div>
         <div class="cv-split-r">
             <div class="cv-panel-head">
-                <h3>EVERY CHAPTER<br />OF THE WORK</h3>
+                <h3>Work Experience</h3>
                 <span class="cv-count">{experience.length}</span>
             </div>
             <div class="cv-roles">
@@ -115,7 +115,7 @@ const yr = (date: string) => date.slice(0, 4);
 
     <section class="cv-band" id="projects">
         <div class="cv-band-head">
-            <h2>Selected work</h2>
+            <h2>Project and Assignments</h2>
             <div class="cv-tabs">
                 <button type="button" class="is-on" data-tab="featured">Cherry picks</button>
                 <button type="button" data-tab="all">All {projects.length}</button>
@@ -150,7 +150,7 @@ const yr = (date: string) => date.slice(0, 4);
     </section>
 
     <section class="cv-band cv-band-alt" id="skills">
-        <div class="cv-band-head"><h2>Capability</h2></div>
+        <div class="cv-band-head"><h2>Skills</h2></div>
         <dl class="cv-skills">
             {skills.map((c) => (
                 <div>
@@ -166,10 +166,10 @@ const yr = (date: string) => date.slice(0, 4);
             <div class="cv-band-head"><h2>Education</h2></div>
             {education.map((e) => (
                 <article class="cv-proj cv-proj-tight">
-                    <span class="cv-year">{yr(e.data.endDate)}</span>
+                    <span class="cv-year">{yr(e.data.endDate)} ~ <br/>  {yr(e.data.startDate)} </span>
                     <div>
                         <h3>{e.data.institution}</h3>
-                        <p>{e.data.degree}, {e.data.field}</p>
+                        <p>{[e.data.degree, e.data.field].filter(Boolean).join(', ')}</p>
                     </div>
                 </article>
             ))}
@@ -181,7 +181,7 @@ const yr = (date: string) => date.slice(0, 4);
                     <span class="cv-year">{p.data.year}</span>
                     <div>
                         <h3>{p.data.title}</h3>
-                        <p>{p.data.venue} ↗</p>
+                        <p>{p.data.venue} <Icon name="ph:arrow-up-right-bold" /></p>
                     </div>
                 </a>
             ))}
@@ -203,7 +203,7 @@ const yr = (date: string) => date.slice(0, 4);
                                 <h3>{l.title}</h3>
                                 <p>{l.note}</p>
                             </div>
-                            <span class="cv-tag cv-arrow">↗</span>
+                            <span class="cv-tag cv-arrow"> <Icon class="cv-icon-arrow" name="ph:arrow-up-right-bold" /> </span>
                         </a>
                     ))}
                 </div>
@@ -701,6 +701,12 @@ const yr = (date: string) => date.slice(0, 4);
     .cv-arrow {
         font-size: 0.95rem;
         letter-spacing: 0;
+    }
+
+    .cv-icon-arrow {
+        vertical-align: -0.5em;
+        width: 1.5rem;
+        height:1.5rem;
     }
 
     .cv-skills {

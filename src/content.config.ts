@@ -23,7 +23,8 @@ const experienceCollection = defineCollection({
         endDate: z.string(),
         location: z.string(),
         description: z.string(),
-        tags: z.array(z.string()).optional()
+        tags: z.array(z.string()).optional(),
+        isCareer: z.boolean().default(false)
     })
 })
 
@@ -38,6 +39,7 @@ const projectCollection = defineCollection({
         featured: z.boolean(),
         description: z.string(),
         tags: z.array(z.string()),
+        isCareer: z.boolean().default(true),
     })
 })
 

@@ -26,6 +26,22 @@ education.sort((a, b) => b.data.startDate.localeCompare(a.data.startDate));
 const publications = await getCollection('publications');
 publications.sort((a, b) => b.data.year - a.data.year);
 
+const careerProjects = projects.filter(project => project.data.isCareer);
+
+const careerExperience = experience.filter( job => job.data.isCareer);
+
+const careerStart = careerExperience
+    .map(entry => entry.data.startDate)
+    .sort()[0]
+
+const [careerYear, careerMonth] = careerStart.split('-').map(Number);
+const timeNow = new Date();
+const years = Math.floor(((timeNow.getFullYear() - careerYear) * 12 + (timeNow.getMonth() + 1 - careerMonth)) / 12);
+
+
+const fill = (text: string, values: Record<string, string | number>) =>
+    text.replace(/\{(\w+)\}/g, (token, key) => String(values[key] ?? token));
+
 /** "2019-08" -> "2019" */
 const yr = (date: string) => date.slice(0, 4);
 ---
@@ -48,14 +64,18 @@ const yr = (date: string) => date.slice(0, 4);
 
         <!-- Nature: the wordmark rotated ninety degrees, climbing the left edge. -->
         <div class="cv-margin">
-            <span class="cv-kicker">Systems by</span>
-            <span class="cv-word">ANDERSSON</span>
+            <span class="cv-word">{about.lastName.toUpperCase()}</span>
+            <span class="cv-kicker">{about.firstName.toUpperCase()}</span>
         </div>
 
         <!-- Nature: a narrow right-hand rail, hairline-divided, right-aligned. -->
         <aside class="cv-rail">
-            <p>{about.bio}</p>
-            <p>{projects.length} delivered systems across steel, robotics, medical and process industry — {experience.length} positions since 2013.</p>
+            <p>{fill(about.bio, {years})}</p>
+            <p>{fill(about.flavourText, {
+                nrOfProjects: careerProjects.length,
+                nrOfPositions: careerExperience.length,
+                careerStart: yr(careerStart),
+            })}</p>
             <a class="cv-ghost" href="/cv.pdf">Download<Icon class="icon-button" name="ph:cloud-arrow-down-light" /></a>
         </aside>
     </section>
@@ -321,15 +341,18 @@ const yr = (date: string) => date.slice(0, 4);
             /* clear the nav: the margin climbs the edge, it does not run over it */
         padding: clamp(5rem, 9vw, 8rem) 0 clamp(1.4rem, 4vw, 3rem) clamp(1.2rem, 3vw, 2.6rem);
         min-width: 0;
+        /* One shared scale for the name pair. Both derive from this, so their ratio is
+        fixed at every viewport size. Two separate clamps would reach their bounds at
+        different widths and the proportion would drift. */
+        --name-scale: clamp(2rem, min(5.4vw, 6.6vh), 5.4rem);
     }
     .cv-kicker {
-        font-family: "Bodoni Moda", Georgia, serif;
-        font-weight: 600;
-        font-variation-settings: "opsz" 16;
-        font-size: clamp(1rem, 1.5vw, 1.35rem);
-        line-height: 1.15;
+        font-weight: 150;
+        font-size: calc(var(--name-scale) * 0.9);
+        line-height: 0.9;
         max-width: 7ch;
         margin-bottom: 0.7rem;
+        letter-spacing: -0.1em;
     }
     .cv-word {
         writing-mode: vertical-rl;
@@ -337,7 +360,7 @@ const yr = (date: string) => date.slice(0, 4);
         font-family: "Bodoni Moda", Georgia, serif;
         font-weight: 700;
  
-        font-size: clamp(2rem, min(5.4vw, 6.6vh), 5.4rem);
+        font-size: var(--name-scale);
         line-height: 0.9;
         /* Bodoni Moda is a didone: its opsz axis picks a hairline display cut at large
            sizes, which is illegible rotated. Pinning opsz low forces the sturdier text
@@ -353,7 +376,7 @@ const yr = (date: string) => date.slice(0, 4);
         position: relative;
         z-index: 2;
         margin: auto 0 clamp(1.4rem, 4vw, 3rem) auto;
-        width: min(30ch, 34vw);
+        width: min(34ch, 34vw);
         padding-right: clamp(1.2rem, 3vw, 2.6rem);
         padding-top: clamp(5rem, 9vw, 8rem);
         text-align: right;
@@ -361,6 +384,7 @@ const yr = (date: string) => date.slice(0, 4);
         flex-direction: column;
         align-items: flex-end;
         gap: 1.1rem;
+        white-space: pre-line;   /* newlines in the text become breaks */
     }
     .cv-rail p {
         margin: 0;
@@ -740,6 +764,9 @@ const yr = (date: string) => date.slice(0, 4);
         }
         .cv-tag {
             display: none;
+        }
+        .cv-margin {
+        --name-scale: clamp(2.6rem, 15vw, 5rem);
         }
     }
 /*

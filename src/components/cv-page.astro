@@ -257,7 +257,8 @@ const yr = (date: string) => date.slice(0, 4);
     /* ---------- hero ---------- */
     .cv-hero {
         position: relative;
-        min-height: clamp(560px, 96vh, 980px);
+        min-height: clamp(500px, 96vh, 980px);
+        min-height: clamp(500px, 96svh, 980px);
         display: flex;
         overflow: hidden;
         color: var(--paper);
@@ -303,7 +304,7 @@ const yr = (date: string) => date.slice(0, 4);
     }
     .cv-glyph {
         margin-left: auto;
-        font-size: 1.4rem;
+        font-size: 1.6rem;
         color: var(--terra-lift);
     }
 
@@ -354,6 +355,7 @@ const yr = (date: string) => date.slice(0, 4);
         margin: auto 0 clamp(1.4rem, 4vw, 3rem) auto;
         width: min(30ch, 34vw);
         padding-right: clamp(1.2rem, 3vw, 2.6rem);
+        padding-top: clamp(5rem, 9vw, 8rem);
         text-align: right;
         display: flex;
         flex-direction: column;
@@ -740,17 +742,21 @@ const yr = (date: string) => date.slice(0, 4);
             display: none;
         }
     }
-
+/*
     @media (max-height: 480px){
         .cv-hero{
             min-height: 100vh;
         }
         .cv-word {
-            writing-mode:horizontal-tb
-            font-size: clamp(1.8rem, 7vh, 2.8rem)
+            writing-mode:horizontal-tb;
+            transform: none;
+            font-size: clamp(1.8rem, 7vh, 2.8rem);
+        }
+        .cv-margin{
+            padding-top: clamp(3rem, 12vh, 5rem);
         }
     }
-
+/*
     /* ------------------------------------------------------------------
        PRINT / PDF. The Pipeline generates dist/cv.pdf by loading this page
        in headless Chromium and calling page.pdf(), which does NOT scroll.

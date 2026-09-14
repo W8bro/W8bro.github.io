@@ -32,9 +32,12 @@ const careerStart = careerExperience
     .map(entry => entry.data.startDate)
     .sort()[0]
 
+    
 const [careerYear, careerMonth] = careerStart.split('-').map(Number);
 const timeNow = new Date();
 const years = Math.floor(((timeNow.getFullYear() - careerYear) * 12 + (timeNow.getMonth() + 1 - careerMonth)) / 12);
+    
+const currentYear = timeNow.getFullYear();
 
 // private methods
 
@@ -88,6 +91,11 @@ const yr = (date: string) => date.slice(0, 4);
                 {photos.split.src && <img src={photos.split.src} alt={photos.split.alt} loading="lazy" />}
             </div>
             <h2 class="cv-huge">WORK<br />PHILOSOPHY</h2>
+            <div class="cv-subs">
+                <p class="cv-sub"><span class="cv-glyph">≋</span> {philosophy.sub}</p>
+                <p class="cv-sub cv-sub-end"><span class="cv-glyph">≋</span> {philosophy.sub}</p>
+            </div>
+
             <div class="cv-principles" data-principles>
                 <ul class="cv-principle-track">
                     {philosophy.principle.map( p => (
@@ -103,16 +111,11 @@ const yr = (date: string) => date.slice(0, 4);
                     ))}
                 </div >
             </div>
-
-           <!--  <p class="cv-sub"><span class="cv-glyph">≋</span> {philosophy.sub}</p>
-            <ul class="cv-principles">
-                {philosophy.principle.map( p => <li><span class="cv-principle-label">{p.label}</span></li>)}
-            </ul> -->
             
             <div class="cv-inputs">
-                <span>2013</span>
-                <span>Present</span>
-                <span>{experience.length} roles</span>
+                <span>Curious</span>
+                <span>Inquisitive</span>
+                <span>Proactice</span>
                 <a class="cv-square" href="#projects">See Projects <span>&#8594;</span></a>
             </div>
         </div>
@@ -126,7 +129,7 @@ const yr = (date: string) => date.slice(0, 4);
                     <article class="cv-role">
                         <h4>{e.data.company}</h4>
                         <p class="cv-role-meta">{e.data.role}</p>
-                        <p class="cv-role-meta">{yr(e.data.startDate)} — {e.data.endDate} · {e.data.location}</p>
+                        <p class="cv-role-meta">{e.data.startDate} — {e.data.endDate} · {e.data.location}</p>
                     </article>
                 ))}
             </div>
@@ -221,9 +224,8 @@ const yr = (date: string) => date.slice(0, 4);
                             <span class="cv-where">{l.where}</span>
                             <div>
                                 <h3>{l.title}</h3>
-                                <p>{l.note}</p>
+                                <p>{l.note} <Icon class="cv-icon-small" name="ph:arrow-up-right-bold" /></p>
                             </div>
-                            <span class="cv-tag cv-arrow"> <Icon class="cv-icon" name="ph:arrow-up-right-bold" /> </span>
                         </a>
                     ))}
                 </div>
@@ -232,7 +234,7 @@ const yr = (date: string) => date.slice(0, 4);
     }
 
     <footer class="cv-foot">
-        <span>W8BRO.GITHUB.IO</span>
+        <span>{about.firstName} {about.lastName} - {currentYear}</span>
         <span>Bodoni Moda 600–700, opsz pinned / Inter</span>
     </footer>
 </div>

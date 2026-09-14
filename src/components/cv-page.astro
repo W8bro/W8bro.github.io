@@ -7,11 +7,9 @@ import { links } from '../data/links';
 import { photos } from '../data/photos';
 
 import { Icon } from 'astro-icon/components';
+import { philosophy } from '../data/philosophy';
 
-// Design: issue #10, variant C9 (photographic-editorial). Two things in the CSS below are
-// load-bearing and easy to break: the `font-variation-settings` on every Bodoni rule (the
-// optical-size axis, not just the weight, is what makes it legible) and the z-index on
-// .cv-nav. Both are commented at their definitions.
+
 
 const experience = await getCollection('experience');
 experience.sort((a, b) => b.data.startDate.localeCompare(a.data.startDate));
@@ -38,12 +36,14 @@ const [careerYear, careerMonth] = careerStart.split('-').map(Number);
 const timeNow = new Date();
 const years = Math.floor(((timeNow.getFullYear() - careerYear) * 12 + (timeNow.getMonth() + 1 - careerMonth)) / 12);
 
+// private methods
 
 const fill = (text: string, values: Record<string, string | number>) =>
     text.replace(/\{(\w+)\}/g, (token, key) => String(values[key] ?? token));
 
 /** "2019-08" -> "2019" */
 const yr = (date: string) => date.slice(0, 4);
+
 ---
 
 <div class="cv">
@@ -54,7 +54,7 @@ const yr = (date: string) => date.slice(0, 4);
         </div>
 
         <header class="cv-nav">
-            <a class="is-on" href="#about"><Icon class="icon-large" name="ph:house-simple-bold" /></a>
+            <a class="is-on" href="#about"><Icon class="cv-icon" name="ph:house-simple-bold" /></a>
             <a href="#experience">Experience</a>
             <a href="#projects">Projects</a>
             <a href="#skills">Skills</a>
@@ -76,7 +76,7 @@ const yr = (date: string) => date.slice(0, 4);
                 nrOfPositions: careerExperience.length,
                 careerStart: yr(careerStart),
             })}</p>
-            <a class="cv-ghost" href="/cv.pdf">Download<Icon class="icon-button" name="ph:cloud-arrow-down-light" /></a>
+            <a class="cv-ghost" href="/cv.pdf">Download<Icon class="cv-icon-button" name="ph:cloud-arrow-down-light" /></a>
         </aside>
     </section>
 
@@ -87,8 +87,28 @@ const yr = (date: string) => date.slice(0, 4);
             <div class="cv-photo cv-photo-split">
                 {photos.split.src && <img src={photos.split.src} alt={photos.split.alt} loading="lazy" />}
             </div>
-            <h2 class="cv-huge">BUILT FOR<br />HEAVY<br />INDUSTRY</h2>
-            <p class="cv-sub"><span class="cv-glyph">≋</span> Test systems, control software and robot cell platforms that run on a factory floor</p>
+            <h2 class="cv-huge">WORK<br />PHILOSOPHY</h2>
+            <div class="cv-principles" data-principles>
+                <ul class="cv-principle-track">
+                    {philosophy.principle.map( p => (
+                        <li class="cv-principle">
+                            <span class="cv-principle-label">{p.label}</span>
+                            <span class="cv-principle-line">{p.line}</span>
+                        </li> 
+                    ))}
+                </ul> 
+                <div class="cv-principle-dots" hidden>
+                    {philosophy.principle.map((p, i) => (
+                        <button type="button" data-go={i} aria-label={`Show ${p.label}`}></button>
+                    ))}
+                </div >
+            </div>
+
+           <!--  <p class="cv-sub"><span class="cv-glyph">≋</span> {philosophy.sub}</p>
+            <ul class="cv-principles">
+                {philosophy.principle.map( p => <li><span class="cv-principle-label">{p.label}</span></li>)}
+            </ul> -->
+            
             <div class="cv-inputs">
                 <span>2013</span>
                 <span>Present</span>
@@ -181,7 +201,7 @@ const yr = (date: string) => date.slice(0, 4);
                     <span class="cv-year">{p.data.year}</span>
                     <div>
                         <h3>{p.data.title}</h3>
-                        <p>{p.data.venue} <Icon name="ph:arrow-up-right-bold" /></p>
+                        <p>{p.data.venue} <Icon class="cv-icon-small" name="ph:arrow-up-right-bold" /></p>
                     </div>
                 </a>
             ))}
@@ -203,7 +223,7 @@ const yr = (date: string) => date.slice(0, 4);
                                 <h3>{l.title}</h3>
                                 <p>{l.note}</p>
                             </div>
-                            <span class="cv-tag cv-arrow"> <Icon class="cv-icon-arrow" name="ph:arrow-up-right-bold" /> </span>
+                            <span class="cv-tag cv-arrow"> <Icon class="cv-icon" name="ph:arrow-up-right-bold" /> </span>
                         </a>
                     ))}
                 </div>
@@ -218,724 +238,9 @@ const yr = (date: string) => date.slice(0, 4);
 </div>
 
 <style>
-    .cv {
-        /* colour tokens come from src/styles/global.css */
-        background: var(--paper);
-        color: var(--ink);
-        font-family: Inter, system-ui, sans-serif;
-        -webkit-font-smoothing: antialiased;
-    }
-
-    /* Every photograph is duotoned into the earth/gold range in CSS, so source images
-       can be plain frames — see src/data/photos.ts. */
-    /* Reveal on scroll. Scoped to .reveal-ready, a class only the script adds, so with
-       JS off nothing is ever hidden. Uses the independent `translate` property rather than
-       `transform`, because the rotated wordmark already owns `transform: rotate(180deg)`
-       and animating transform would flatten it. Print overrides live at the bottom. */
-    .cv.reveal-ready [data-reveal] {
-        opacity: 0;
-        translate: 0 14px;
-        transition:
-            opacity 0.75s cubic-bezier(0.2, 0.6, 0.2, 1),
-            translate 0.75s cubic-bezier(0.2, 0.6, 0.2, 1);
-    }
-    .cv.reveal-ready [data-reveal].is-in {
-        opacity: 1;
-        translate: none;
-    }
-    @media (prefers-reduced-motion: reduce) {
-        .cv.reveal-ready [data-reveal],
-        .cv.reveal-ready [data-reveal].is-in {
-            opacity: 1;
-            translate: none;
-            transition: none;
-        }
-    }
-
-    .cv-photo {
-        position: relative;
-        isolation: isolate;
-        overflow: hidden;
-        background: linear-gradient(150deg, #6e5a34 0%, #8a6b3e 34%, #46381f 74%, #2a2114 100%);
-    }
-    .cv-photo img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        mix-blend-mode: luminosity;
-        opacity: 0.95;
-    }
-    /* the fade that keeps overlaid text legible */
-    .cv-photo::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(100deg, rgba(42, 33, 20, 0.62) 0%, rgba(42, 33, 20, 0.18) 46%, rgba(42, 33, 20, 0.55) 100%);
-    }
-
-    /* ---------- hero ---------- */
-    .cv-hero {
-        position: relative;
-        min-height: clamp(500px, 96vh, 980px);
-        min-height: clamp(500px, 96svh, 980px);
-        display: flex;
-        overflow: hidden;
-        color: var(--paper);
-    }
-    .cv-photo-hero {
-        position: absolute;
-        inset: 0;
-        z-index: 0;
-    }
-    /* An even, deeper grade across the whole frame rather than a fade down one edge: a
-       one-sided scrim covered the top-left nav links. */
-    .cv-photo-hero::after {
-        background: linear-gradient(
-            176deg,
-            rgba(38, 28, 16, 0.6) 0%,
-            rgba(38, 28, 16, 0.46) 42%,
-            rgba(38, 28, 16, 0.52) 72%,
-            rgba(38, 28, 16, 0.66) 100%
-        );
-    }
-    .cv-nav {
-        position: absolute;
-        /* Must stay above .cv-margin. That poster-margin column is full height and comes
-           later in the DOM, so at equal z-index it swallows clicks on the nav links.
-           Do not lower this. */
-        z-index: 4;
-        top: clamp(1.2rem, 3vw, 2.4rem);
-        left: clamp(1.2rem, 3vw, 2.6rem);
-        right: clamp(1.2rem, 3vw, 2.6rem);
-        display: flex;
-        align-items: center;
-        gap: clamp(0.9rem, 2.4vw, 2rem);
-        font-size: 1.02rem;
-        font-weight: 400;
-    }
-    .cv-nav a {
-        color: var(--paper);
-        text-decoration: none;
-    }
-    .cv-nav a.is-on {
-        color: var(--terra-lift);
-        border-bottom: 1px solid var(--terra-lift);
-    }
-    .cv-glyph {
-        margin-left: auto;
-        font-size: 1.6rem;
-        color: var(--terra-lift);
-    }
-
-    /* Nature's poster margin. */
-    .cv-margin {
-        position: relative;
-        z-index: 2;
-        isolation: isolate;
-            /* nothing here is interactive, so it must never take a click */
-        pointer-events: none;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-            /* clear the nav: the margin climbs the edge, it does not run over it */
-        padding: clamp(5rem, 9vw, 8rem) 0 clamp(1.4rem, 4vw, 3rem) clamp(1.2rem, 3vw, 2.6rem);
-        min-width: 0;
-        /* One shared scale for the name pair. Both derive from this, so their ratio is
-        fixed at every viewport size. Two separate clamps would reach their bounds at
-        different widths and the proportion would drift. */
-        --name-scale: clamp(2rem, min(5.4vw, 6.6vh), 5.4rem);
-    }
-    .cv-kicker {
-        font-weight: 150;
-        font-size: calc(var(--name-scale) * 0.9);
-        line-height: 0.9;
-        max-width: 7ch;
-        margin-bottom: 0.7rem;
-        letter-spacing: -0.1em;
-    }
-    .cv-word {
-        writing-mode: vertical-rl;
-        transform: rotate(180deg);
-        font-family: "Bodoni Moda", Georgia, serif;
-        font-weight: 700;
- 
-        font-size: var(--name-scale);
-        line-height: 0.9;
-        /* Bodoni Moda is a didone: its opsz axis picks a hairline display cut at large
-           sizes, which is illegible rotated. Pinning opsz low forces the sturdier text
-           cut. Keep both this and the weight — dropping either brings the hairlines back. */
-        font-weight: 700;
-        font-variation-settings: "opsz" 14, "wght" 700;
-        letter-spacing: 0.035em;
-        color: var(--terra-lift);
-    }
-
-    /* Nature's right-hand rail. */
-    .cv-rail {
-        position: relative;
-        z-index: 2;
-        margin: auto 0 clamp(1.4rem, 4vw, 3rem) auto;
-        width: min(34ch, 34vw);
-        padding-right: clamp(1.2rem, 3vw, 2.6rem);
-        padding-top: clamp(5rem, 9vw, 8rem);
-        text-align: right;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 1.1rem;
-        white-space: pre-line;   /* newlines in the text become breaks */
-    }
-    .cv-rail p {
-        margin: 0;
-        padding-bottom: 1.1rem;
-        border-bottom: 1px solid rgba(251, 247, 241, 0.35);
-        font-size: 0.92rem;
-        font-weight: 300;
-        line-height: 1.55;
-    }
-    .cv-ghost {
-        border: 1px solid rgba(251, 247, 241, 0.55);
-        border-radius: 999px;
-        padding: 0.62rem 1.3rem;
-        font-size: 0.8rem;
-        color: var(--paper);
-        text-decoration: none;
-    }
-    .cv-ghost:hover {
-        background: rgba(251, 247, 241, 0.14);
-    }
-
-    /* ---------- Wooden split ---------- */
-    .cv-split {
-        display: grid;
-        grid-template-columns: 1fr minmax(320px, 38%);
-        gap: 10px;
-        padding: 10px;
-        background: #100f0d;
-    }
-    .cv-split-l {
-        /* query container for the chip row below; see the note at the top of this file */
-        container-type: inline-size;
-        container-name: panel;
-        position: relative;
-        min-height: min(82vh, 820px);
-        border-radius: 20px;
-        overflow: hidden;
-        padding: clamp(1.4rem, 3.4vw, 3rem);
-        display: flex;
-        flex-direction: column;
-        color: var(--paper);
-    }
-    .cv-photo-split {
-        position: absolute;
-        inset: 0;
-        z-index: 0;
-        border-radius: 20px;
-    }
-    .cv-huge {
-        position: relative;
-        z-index: 1;
-        margin: 0;
-        font-size: clamp(2.5rem, 8.2vw, 7rem);
-        font-weight: 200;
-        line-height: 0.94;
-        letter-spacing: -0.045em;
-    }
-    .cv-sub {
-        position: relative;
-        z-index: 1;
-        margin: auto 0 1.4rem;
-        max-width: 34ch;
-        display: flex;
-        gap: 0.7rem;
-        font-size: 0.92rem;
-        font-weight: 300;
-        line-height: 1.5;
-    }
-    /* Wooden: frosted-glass inputs floating over the photograph beside a hard white
-       square button. */
-    .cv-inputs {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.6rem;
-        align-items: stretch;
-    }
-    /* Direct children only — the arrow inside .cv-square is a span too. */
-    .cv-inputs > span {
-        border-radius: 10px;
-        padding: 0.95rem 1.5rem;
-        background: rgba(251, 247, 241, 0.12);
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        box-shadow: inset 0 0 0 1px rgba(251, 247, 241, 0.18);
-        font-size: 0.88rem;
-    }
-    /* Frosted glass matching the chips beside it, kept distinct by a brighter hairline
-       and an arrow rather than by a block of white. */
-    .cv-square {
-        margin-left: auto;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.65rem;
-        border-radius: 10px;
-        padding: 0.95rem 1.4rem;
-        background: rgba(251, 247, 241, 0.17);
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        box-shadow: inset 0 0 0 1px rgba(251, 247, 241, 0.45);
-        color: var(--paper);
-        text-decoration: none;
-        font-size: 0.88rem;
-        font-weight: 500;
-        transition:
-            background 0.3s ease,
-            box-shadow 0.3s ease;
-    }
-    .cv-square span {
-        color: var(--terra-lift);
-        transition: translate 0.3s ease;
-    }
-    .cv-square:hover {
-        background: rgba(251, 247, 241, 0.27);
-        box-shadow: inset 0 0 0 1px rgba(251, 247, 241, 0.7);
-    }
-    .cv-square:hover span {
-        translate: 3px 0;
-    }
-
-    /* Measured: chips 272px + button 130px + three 0.6rem gaps 29px = 431px of panel
-       content box. Hidden at 470px so the button goes just before it would wrap under the
-       chips rather than on the same frame. Re-measure if the chip labels or the typeface
-       change. Container query, not a media query: the panel is a fraction of the viewport
-       on desktop but full width below 960px. */
-    @container panel (max-width: 470px) {
-        .cv-square {
-            display: none;
-        }
-    }
-    /* Fallback for engines without container queries. */
-    @supports not (container-type: inline-size) {
-        @media (max-width: 535px) {
-            .cv-square {
-                display: none;
-            }
-        }
-    }
-
-    .cv-split-r {
-        border-radius: 20px;
-        background: var(--charcoal);
-        color: var(--paper);
-        padding: clamp(1.4rem, 3vw, 2.4rem);
-        display: flex;
-        flex-direction: column;
-    }
-    .cv-panel-head {
-        display: flex;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-    .cv-panel-head h3 {
-        margin: 0;
-        font-size: clamp(1.05rem, 1.5vw, 1.3rem);
-        font-weight: 400;
-        letter-spacing: -0.01em;
-        line-height: 1.2;
-    }
-    .cv-count {
-        margin-left: auto;
-        font-family: "Bodoni Moda", Georgia, serif;
-        font-weight: 600;
-        font-variation-settings: "opsz" 16;
-        font-size: 1.5rem;
-        color: rgba(251, 247, 241, 0.5);
-        line-height: 1;
-    }
-
-    .cv-roles {
-        margin-top: 1.6rem;
-        display: flex;
-        flex-direction: column;
-    }
-    .cv-role {
-        padding: 0.95rem 0;
-        border-top: 1px solid rgba(251, 247, 241, 0.16);
-    }
-    .cv-role:last-child {
-        border-bottom: 1px solid rgba(251, 247, 241, 0.16);
-    }
-    .cv-role h4 {
-        margin: 0;
-        font-family: "Bodoni Moda", Georgia, serif;
-        font-size: clamp(1.15rem, 1.7vw, 1.45rem);
-        font-weight: 600;
-        font-variation-settings: "opsz" 16;
-        letter-spacing: -0.005em;
-    }
-    .cv-role-meta {
-        margin: 0.2rem 0 0;
-        font-size: 0.86rem;
-        font-weight: 300;
-        color: rgba(251, 247, 241, 0.6);
-    }
-
-    /* ---------- bands ---------- */
-    .cv-band {
-        padding: clamp(3.4rem, 8vw, 7rem) clamp(1.2rem, 4vw, 4.5rem);
-        max-width: 1500px;
-        margin: 0 auto;
-    }
-    .cv-band-alt {
-        background: var(--paper-alt);
-        max-width: none;
-    }
-    .cv-band-head {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 1rem;
-        margin-bottom: 2rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid rgba(34, 32, 29, 0.2);
-    }
-    .cv-band-head h2 {
-        margin: 0;
-        font-family: "Bodoni Moda", Georgia, serif;
-        font-size: clamp(1.9rem, 4.4vw, 3.4rem);
-        font-weight: 700;
-        font-variation-settings: "opsz" 18, "wght" 700;
-        letter-spacing: -0.012em;
-    }
-    .cv-tabs {
-        display: flex;
-        gap: 1.3rem;
-    }
-    .cv-tabs button {
-        border: 0;
-        background: transparent;
-        font: inherit;
-        font-size: 0.86rem;
-        color: rgba(34, 32, 29, 0.45);
-        padding: 0.2rem 0;
-        border-bottom: 1px solid transparent;
-        cursor: pointer;
-    }
-    .cv-tabs button.is-on {
-        color: var(--terra);
-        border-bottom-color: var(--terra);
-    }
-
-    .cv-stack {
-        display: grid;
-    }
-    .cv-stack > * {
-        grid-area: 1 / 1;
-    }
-    .cv-stack > [hidden] {
-        display: none;
-    }
-    .cv-proj {
-        display: grid;
-        grid-template-columns: 6ch 1fr auto;
-        gap: 1.6rem;
-        align-items: baseline;
-        padding: 1.25rem 0;
-        border-bottom: 1px solid rgba(34, 32, 29, 0.13);
-        text-decoration: none;
-        color: inherit;
-    }
-    .cv-proj-tight {
-        grid-template-columns: 6ch 1fr;
-    }
-    .cv-year {
-        font-family: "Bodoni Moda", Georgia, serif;
-        font-size: 1.05rem;
-        font-weight: 600;
-        font-variation-settings: "opsz" 8;
-        color: var(--terra-deep);
-    }
-    .cv-proj h3 {
-        margin: 0;
-        max-width: 62ch;
-        font-family: "Bodoni Moda", Georgia, serif;
-        font-size: clamp(1.14rem, 2vw, 1.62rem);
-        font-weight: 600;
-        /* opsz 8 is the text extreme of the optical-size axis — the sturdiest, most open
-           cut. At body scale in a long list this matters more than weight does. */
-        font-variation-settings: "opsz" 8, "wght" 600;
-        letter-spacing: -0.002em;
-        line-height: 1.28;
-    }
-    .cv-proj p {
-        margin: 0.34rem 0 0;
-        font-size: 0.88rem;
-        font-weight: 400;
-        color: rgba(34, 32, 29, 0.8);
-    }
-    .cv-proj:hover h3 {
-        color: var(--terra);
-    }
-    .cv-tag {
-        font-size: 0.7rem;
-        font-weight: 500;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: rgba(34, 32, 29, 0.62);
-        white-space: nowrap;
-    }
-
-    /* Elsewhere reuses the assignment-row idiom so the band reads as native. */
-    .cv-where {
-        font-family: "Bodoni Moda", Georgia, serif;
-        font-size: 1.02rem;
-        font-weight: 600;
-        font-variation-settings: "opsz" 8;
-        color: var(--terra-deep);
-    }
-    .cv-link:hover h3 {
-        color: var(--terra);
-    }
-    .cv-arrow {
-        font-size: 0.95rem;
-        letter-spacing: 0;
-    }
-
-    .cv-icon-arrow {
-        vertical-align: -0.5em;
-        width: 1.5rem;
-        height:1.5rem;
-    }
-
-    .cv-skills {
-        margin: 0;
-        max-width: 1500px;
-    }
-    .cv-skills > div {
-        display: grid;
-        grid-template-columns: minmax(160px, 22%) 1fr;
-        gap: 1.6rem;
-        padding: 1.3rem 0;
-        border-bottom: 1px solid rgba(34, 32, 29, 0.13);
-    }
-    .cv-skills dt {
-        font-family: "Bodoni Moda", Georgia, serif;
-        font-size: 1.3rem;
-        font-weight: 700;
-        /* body scale, so the same text cut the assignment list needs */
-        font-variation-settings: "opsz" 8, "wght" 700;
-        letter-spacing: -0.002em;
-        line-height: 1.25;
-    }
-    .cv-skills dd {
-        margin: 0;
-        font-weight: 400;
-        line-height: 1.7;
-        color: rgba(34, 32, 29, 0.86);
-    }
-
-    .cv-two {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: clamp(1.6rem, 5vw, 4.5rem);
-    }
-    .cv-foot {
-        display: flex;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 1.4rem clamp(1.2rem, 4vw, 4.5rem);
-        border-top: 1px solid rgba(34, 32, 29, 0.2);
-        font-size: 0.68rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: rgba(34, 32, 29, 0.5);
-    }
-
-    @media (max-width: 950px) {
-        .cv-split,
-        .cv-two,
-        .cv-skills > div {
-            grid-template-columns: 1fr;
-        }
-        .cv-rail {
-            display: none;
-        }
-        .cv-word {
-            font-size: clamp(2.6rem, 15vw, 5rem);
-        }
-        .cv-proj {
-            grid-template-columns: 5ch 1fr;
-        }
-        .cv-tag {
-            display: none;
-        }
-        .cv-margin {
-        --name-scale: clamp(2.6rem, 15vw, 5rem);
-        }
-    }
-/*
-    @media (max-height: 480px){
-        .cv-hero{
-            min-height: 100vh;
-        }
-        .cv-word {
-            writing-mode:horizontal-tb;
-            transform: none;
-            font-size: clamp(1.8rem, 7vh, 2.8rem);
-        }
-        .cv-margin{
-            padding-top: clamp(3rem, 12vh, 5rem);
-        }
-    }
-/*
-    /* ------------------------------------------------------------------
-       PRINT / PDF. The Pipeline generates dist/cv.pdf by loading this page
-       in headless Chromium and calling page.pdf(), which does NOT scroll.
-       Without the first rule below every revealed element would still be at
-       opacity 0 and the PDF would come out blank.
-       ------------------------------------------------------------------ */
-    @media print {
-        .cv.reveal-ready [data-reveal],
-        .cv.reveal-ready [data-reveal].is-in {
-            opacity: 1 !important;
-            translate: none !important;
-            transition: none !important;
-        }
-
-        /* screen-only affordances */
-        .cv-nav,
-        .cv-ghost,
-        .cv-square,
-        .cv-tabs,
-        .cv-glyph {
-            display: none !important;
-        }
-
-        /* the hero is a cover page; everything after it flows as documents do */
-        .cv-hero {
-            min-height: auto;
-            page-break-after: always;
-            break-after: page;
-        }
-        .cv-split {
-            grid-template-columns: 1fr;
-        }
-        .cv-split-l {
-            min-height: 22rem;
-        }
-
-        /* a row should not be split across two pages */
-        .cv-proj,
-        .cv-role,
-        .cv-skills > div {
-            page-break-inside: avoid;
-            break-inside: avoid;
-        }
-        .cv-band-head {
-            page-break-after: avoid;
-            break-after: avoid;
-        }
-
-        /* NB: the projects tabs are switched by scripts/generate-pdf.ts, not here.
-           Tailwind preflight ships [hidden]{display:none!important} inside @layer base,
-           and a layered !important beats an unlayered one, so a rule here could not win
-           against the hidden attribute. See that script for the detail. */
-    }
+    @import '../styles/cv-page.css';
 </style>
 
 <script>
-    // ---------- reveal on scroll ----------
-    const root = document.querySelector<HTMLElement>(".cv");
-
-    if (root) {
-        const REVEAL = [
-            ".cv-kicker",
-            ".cv-word",
-            ".cv-rail > *",
-            ".cv-huge",
-            ".cv-sub",
-            ".cv-inputs",
-            ".cv-panel-head",
-            ".cv-role",
-            ".cv-band-head",
-            ".cv-proj",
-            ".cv-skills > div",
-            ".cv-foot > *",
-        ].join(", ");
-
-        const targets = [...root.querySelectorAll<HTMLElement>(REVEAL)];
-        targets.forEach((el) => el.setAttribute("data-reveal", ""));
-
-        // stagger by position among revealing siblings, capped so long lists don't crawl
-        const seen = new Map<Element, number>();
-        targets.forEach((el) => {
-            const parent = el.parentElement;
-            if (!parent) return;
-            const i = seen.get(parent) ?? 0;
-            seen.set(parent, i + 1);
-            el.style.transitionDelay = `${Math.min(i * 55, 330)}ms`;
-        });
-
-        // added last, so the page is never briefly blank while the above runs
-        root.classList.add("reveal-ready");
-
-        const show = (el: Element) => {
-            el.classList.add("is-in");
-            io.unobserve(el);
-        };
-
-        const io = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((e) => {
-                    if (!e.isIntersecting) return;
-                    show(e.target); // reveal once; never re-hide on scroll up
-                });
-            },
-            {
-                // threshold 0, deliberately: with a fractional threshold an element that
-                // straddles the rootMargin dead zone can have too little of itself inside
-                // the root to ever fire. That hid the "Download CV" button on load - it sat
-                // 3px inside a root shrunk by 12%, i.e. 7% of its own height. The negative
-                // rootMargin already provides the "reveal just after it comes up" delay.
-                rootMargin: "0px 0px -12% 0px",
-                threshold: 0,
-            },
-        );
-        targets.forEach((el) => io.observe(el));
-
-        // The bottom rootMargin above makes the last 12% of the viewport a dead zone,
-        // which is nice for timing but means anything sitting in the final screenful of
-        // the DOCUMENT can never satisfy the observer - the footer colophon stayed at
-        // opacity 0 forever. So: once the reader has actually reached the end of the page,
-        // nothing is allowed to still be hidden. Also covers a page too short to scroll.
-        const revealTail = () => {
-            const doc = document.documentElement;
-            if (window.innerHeight + Math.ceil(window.scrollY) < doc.scrollHeight - 2) return;
-            targets.forEach(show);
-        };
-        window.addEventListener("scroll", revealTail, { passive: true });
-        window.addEventListener("resize", revealTail);
-        // NOT called synchronously: at first paint the photographs have no intrinsic size
-        // yet, so scrollHeight can still equal innerHeight - revealTail would then decide
-        // the page was already fully scrolled and reveal everything at once. Wait until
-        // layout has settled, which also covers a page genuinely too short to scroll.
-        if (document.readyState === "complete") requestAnimationFrame(revealTail);
-        else window.addEventListener("load", () => requestAnimationFrame(revealTail));
-    }
-
-    const tabs = document.querySelectorAll<HTMLButtonElement>("[data-tab]");
-    const panels = document.querySelectorAll<HTMLElement>("[data-panel]");
-    tabs.forEach((t) =>
-        t.addEventListener("click", () => {
-            tabs.forEach((o) => o.classList.toggle("is-on", o === t));
-            panels.forEach((p) => (p.hidden = p.dataset.panel !== t.dataset.tab));
-            panels.forEach((p) => {
-                if (p.hidden) return;
-                p.querySelectorAll("[data-reveal]").forEach((el) => el.classList.add("is-in"));
-            });
-        }),
-    );
-
+   import '../scripts/cv-page.ts';
 </script>

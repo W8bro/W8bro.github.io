@@ -6,7 +6,7 @@
 
    Both faces are variable. The weight ranges below are what the files actually carry (wider
    than the Site uses), so the browser interpolates rather than synthesising a fake bold.
-   Bodoni also carries the `opsz` axis that cv-page.astro pins per rule — see the note there.
+   Bodoni also carries the `opsz` axis that cv-page.css pins per rule — see the note there.
 
    Each face is split latin / latin-ext and gated by `unicode-range`, so a visitor loads only
    the subset their text needs; å ä ö live in the latin file. */
@@ -99,19 +99,3 @@ body {
     vertical-align: -0.125em;
     flex: none;
 }
-
-.icon-button {
-    vertical-align: -0.65em;
-    margin-left: 0.5em;
-    width: 1.6rem;
-    height:1.6rem;
-    stroke-width: 0.9;
-}
-
-.icon-large {
-    vertical-align: -0.5em;
-    width: 1.5rem;
-    height:1.5rem;
-    stroke-width: 0.9;
-}
-

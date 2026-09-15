@@ -649,8 +649,8 @@
     /* brand marks track the cap height of the label rather than a fixed rem */
     .cv-icon-brand {
         color: var(--terra-deep);
-        width: 3em;
-        height: 3em;
+        width: 2.5em;
+        height: 2.5em;
         flex: none;
     }
 

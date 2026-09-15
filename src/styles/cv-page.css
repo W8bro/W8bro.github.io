@@ -243,7 +243,7 @@
         margin: 0;
         position: relative;
         margin: auto 0 1.1rem;
-        max-width: 40ch;
+        max-width: 41ch;
         display: flex;
         align-items: center;
         gap: 0.7rem;
@@ -640,12 +640,27 @@
 
     /* Elsewhere reuses the assignment-row idiom so the band reads as native. */
     .cv-where {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+        color: var(--terra-deep);
+    }
+    /* brand marks track the cap height of the label rather than a fixed rem */
+    .cv-icon-brand {
+        color: var(--terra-deep);
+        width: 3em;
+        height: 3em;
+        flex: none;
+    }
+
+    /* .cv-where {
         font-family: "Bodoni Moda", Georgia, serif;
         font-size: 1.02rem;
         font-weight: 600;
         font-variation-settings: "opsz" 8;
         color: var(--terra-deep);
-    }
+    } */
     .cv-link:hover h3 {
         color: var(--terra);
     }

@@ -93,7 +93,7 @@ const yr = (date: string) => date.slice(0, 4);
             <h2 class="cv-huge">WORK<br />PHILOSOPHY</h2>
             <div class="cv-subs">
                 <p class="cv-sub"><span class="cv-glyph">≋</span> {philosophy.sub}</p>
-                <p class="cv-sub cv-sub-end"><span class="cv-glyph">≋</span> {philosophy.sub}</p>
+                <p class="cv-sub cv-sub-end"><span class="cv-glyph">≋</span> {philosophy.sub2}</p>
             </div>
 
             <div class="cv-principles" data-principles>
@@ -221,7 +221,7 @@ const yr = (date: string) => date.slice(0, 4);
                 <div>
                     {links.map((l) => (
                         <a class="cv-proj cv-link" href={l.url}>
-                            <span class="cv-where">{l.where}</span>
+                            <span class="cv-where"><Icon class="cv-icon-brand" name={l.icon} /></span>
                             <div>
                                 <h3>{l.title}</h3>
                                 <p>{l.note} <Icon class="cv-icon-small" name="ph:arrow-up-right-bold" /></p>

@@ -33,13 +33,19 @@ It takes a `data` prop and renders a whole page, so it needs its own route:
 ```astro
 ---
 // src/pages/reference.astro — delete when you are done comparing
-import { loadCVData } from '../components/prototype/cv-data';
-import VariantC9 from '../components/prototype/variant-c9-guard.astro';
-import '../styles/global.css';
+import { loadCVData } from "../components/prototype/cv-data";
+import VariantC9 from "../components/prototype/variant-c9-guard.astro";
+import "../styles/global.css";
 const data = await loadCVData();
 ---
-<html lang="en"><head><meta charset="utf-8" /></head>
-  <body><VariantC9 data={data} /></body>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <VariantC9 data={data} />
+    </body>
 </html>
 ```
 

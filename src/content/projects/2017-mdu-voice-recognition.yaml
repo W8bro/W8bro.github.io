@@ -5,11 +5,11 @@ endDate: "2017-06"
 location: Västerås
 featured: false
 description: >
-  As part of an applied AI course, implemented a pure text-based classification
-  algorithm based on a hidden Markov model combined with a statistical three-grams
-  method.
+    As part of an applied AI course, implemented a pure text-based classification
+    algorithm based on a hidden Markov model combined with a statistical three-grams
+    method.
 tags:
-  - MATLAB
-  - Statistics
-  - Machine Learning
+    - MATLAB
+    - Statistics
+    - Machine Learning
 isCareer: false

@@ -1,42 +1,43 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection } from "astro:content";
 
-import { about } from '../data/about';
-import { skills } from '../data/skills';
-import { links } from '../data/links';
-import { photos } from '../data/photos';
+import { about } from "../data/about";
+import { skills } from "../data/skills";
+import { links } from "../data/links";
+import { photos } from "../data/photos";
 
-import { Icon } from 'astro-icon/components';
-import { philosophy } from '../data/philosophy';
+import { Icon } from "astro-icon/components";
+import { philosophy } from "../data/philosophy";
 
-
-
-const experience = await getCollection('experience');
+const experience = await getCollection("experience");
 experience.sort((a, b) => b.data.startDate.localeCompare(a.data.startDate));
 
-const projects = await getCollection('projects');
+const projects = await getCollection("projects");
 projects.sort((a, b) => b.data.startDate.localeCompare(a.data.startDate));
 const featured = projects.filter((p) => p.data.featured);
 
-const education = await getCollection('education');
+const education = await getCollection("education");
 education.sort((a, b) => b.data.startDate.localeCompare(a.data.startDate));
 
-const publications = await getCollection('publications');
+const publications = await getCollection("publications");
 publications.sort((a, b) => b.data.year - a.data.year);
 
-const careerProjects = projects.filter(project => project.data.isCareer);
+const careerProjects = projects.filter((project) => project.data.isCareer);
 
-const careerExperience = experience.filter( job => job.data.isCareer);
+const careerExperience = experience.filter((job) => job.data.isCareer);
 
 const careerStart = careerExperience
-    .map(entry => entry.data.startDate)
-    .sort()[0]
+    .map((entry) => entry.data.startDate)
+    .sort()[0];
 
-    
-const [careerYear, careerMonth] = careerStart.split('-').map(Number);
+const [careerYear, careerMonth] = careerStart.split("-").map(Number);
 const timeNow = new Date();
-const years = Math.floor(((timeNow.getFullYear() - careerYear) * 12 + (timeNow.getMonth() + 1 - careerMonth)) / 12);
-    
+const years = Math.floor(
+    ((timeNow.getFullYear() - careerYear) * 12 +
+        (timeNow.getMonth() + 1 - careerMonth)) /
+        12,
+);
+
 const currentYear = timeNow.getFullYear();
 
 // private methods
@@ -46,18 +47,25 @@ const fill = (text: string, values: Record<string, string | number>) =>
 
 /** "2019-08" -> "2019" */
 const yr = (date: string) => date.slice(0, 4);
-
 ---
 
 <div class="cv">
     <!-- HERO: full-bleed-single-image, one photograph carrying the whole frame. -->
     <section class="cv-hero" id="about">
         <div class="cv-photo cv-photo-hero">
-            {photos.hero.src && <img src={photos.hero.src} alt={photos.hero.alt} loading="eager" />}
+            {photos.hero.src && (
+                <img
+                    src={photos.hero.src}
+                    alt={photos.hero.alt}
+                    loading="eager"
+                />
+            )}
         </div>
 
         <header class="cv-nav">
-            <a class="is-on" href="#about"><Icon class="cv-icon" name="ph:house-simple-bold" /></a>
+            <a class="is-on" href="#about">
+                <Icon class="cv-icon" name="ph:house-simple-bold" />
+            </a>
             <a href="#experience">Experience</a>
             <a href="#projects">Projects</a>
             <a href="#skills">Skills</a>
@@ -73,13 +81,18 @@ const yr = (date: string) => date.slice(0, 4);
 
         <!-- Nature: a narrow right-hand rail, hairline-divided, right-aligned. -->
         <aside class="cv-rail">
-            <p>{fill(about.bio, {years})}</p>
-            <p>{fill(about.flavourText, {
-                nrOfProjects: careerProjects.length,
-                nrOfPositions: careerExperience.length,
-                careerStart: yr(careerStart),
-            })}</p>
-            <a class="cv-ghost" href="/cv.pdf">Download<Icon class="cv-icon-button" name="ph:cloud-arrow-down-light" /></a>
+            <p>{fill(about.bio, { years })}</p>
+            <p>
+                {fill(about.flavourText, {
+                    nrOfProjects: careerProjects.length,
+                    nrOfPositions: careerExperience.length,
+                    careerStart: yr(careerStart),
+                })}
+            </p>
+            <a class="cv-ghost" href="/cv.pdf">
+                Download
+                <Icon class="cv-icon-button" name="ph:cloud-arrow-down-light" />
+            </a>
         </aside>
     </section>
 
@@ -88,35 +101,55 @@ const yr = (date: string) => date.slice(0, 4);
     <section class="cv-split" id="experience">
         <div class="cv-split-l">
             <div class="cv-photo cv-photo-split">
-                {photos.split.src && <img src={photos.split.src} alt={photos.split.alt} loading="lazy" />}
+                {photos.split.src && (
+                    <img
+                        src={photos.split.src}
+                        alt={photos.split.alt}
+                        loading="lazy"
+                    />
+                )}
             </div>
-            <h2 class="cv-huge">WORK<br />PHILOSOPHY</h2>
+            <h2 class="cv-huge">
+                WORK
+                <br />
+                PHILOSOPHY
+            </h2>
             <div class="cv-subs">
-                <p class="cv-sub"><span class="cv-glyph">≋</span> {philosophy.sub}</p>
-                <p class="cv-sub cv-sub-end"><span class="cv-glyph">≋</span> {philosophy.sub2}</p>
+                <p class="cv-sub">
+                    <span class="cv-glyph">≋</span> {philosophy.sub}
+                </p>
+                <p class="cv-sub cv-sub-end">
+                    <span class="cv-glyph">≋</span> {philosophy.sub2}
+                </p>
             </div>
 
             <div class="cv-principles" data-principles>
                 <ul class="cv-principle-track">
-                    {philosophy.principle.map( p => (
+                    {philosophy.principle.map((p) => (
                         <li class="cv-principle">
                             <span class="cv-principle-label">{p.label}</span>
                             <span class="cv-principle-line">{p.line}</span>
-                        </li> 
+                        </li>
                     ))}
-                </ul> 
+                </ul>
                 <div class="cv-principle-dots" hidden>
                     {philosophy.principle.map((p, i) => (
-                        <button type="button" data-go={i} aria-label={`Show ${p.label}`}></button>
+                        <button
+                            type="button"
+                            data-go={i}
+                            aria-label={`Show ${p.label}`}
+                        ></button>
                     ))}
-                </div >
+                </div>
             </div>
-            
+
             <div class="cv-inputs">
                 <span>Curious</span>
                 <span>Inquisitive</span>
                 <span>Proactice</span>
-                <a class="cv-square" href="#projects">See Projects <span>&#8594;</span></a>
+                <a class="cv-square" href="#projects">
+                    See Projects <span>&#8594;</span>
+                </a>
             </div>
         </div>
         <div class="cv-split-r">
@@ -129,7 +162,10 @@ const yr = (date: string) => date.slice(0, 4);
                     <article class="cv-role">
                         <h4>{e.data.company}</h4>
                         <p class="cv-role-meta">{e.data.role}</p>
-                        <p class="cv-role-meta">{e.data.startDate} — {e.data.endDate} · {e.data.location}</p>
+                        <p class="cv-role-meta">
+                            {e.data.startDate} — {e.data.endDate} ·{" "}
+                            {e.data.location}
+                        </p>
                     </article>
                 ))}
             </div>
@@ -140,8 +176,12 @@ const yr = (date: string) => date.slice(0, 4);
         <div class="cv-band-head">
             <h2>Project and Assignments</h2>
             <div class="cv-tabs">
-                <button type="button" class="is-on" data-tab="featured">Cherry picks</button>
-                <button type="button" data-tab="all">All {projects.length}</button>
+                <button type="button" class="is-on" data-tab="featured">
+                    Cherry picks
+                </button>
+                <button type="button" data-tab="all">
+                    All {projects.length}
+                </button>
             </div>
         </div>
         <div class="cv-stack">
@@ -151,7 +191,9 @@ const yr = (date: string) => date.slice(0, 4);
                         <span class="cv-year">{yr(p.data.startDate)}</span>
                         <div>
                             <h3>{p.data.title}</h3>
-                            <p>{p.data.client} · {p.data.location}</p>
+                            <p>
+                                {p.data.client} · {p.data.location}
+                            </p>
                         </div>
                         <span class="cv-tag">{p.data.tags[0]}</span>
                     </article>
@@ -163,7 +205,9 @@ const yr = (date: string) => date.slice(0, 4);
                         <span class="cv-year">{yr(p.data.startDate)}</span>
                         <div>
                             <h3>{p.data.title}</h3>
-                            <p>{p.data.client} · {p.data.location}</p>
+                            <p>
+                                {p.data.client} · {p.data.location}
+                            </p>
                         </div>
                         <span class="cv-tag">{p.data.tags[0]}</span>
                     </article>
@@ -173,12 +217,14 @@ const yr = (date: string) => date.slice(0, 4);
     </section>
 
     <section class="cv-band cv-band-alt" id="skills">
-        <div class="cv-band-head"><h2>Skills</h2></div>
+        <div class="cv-band-head">
+            <h2>Skills</h2>
+        </div>
         <dl class="cv-skills">
             {skills.map((c) => (
                 <div>
                     <dt>{c.category}</dt>
-                    <dd>{c.items.join(' · ')}</dd>
+                    <dd>{c.items.join(" · ")}</dd>
                 </div>
             ))}
         </dl>
@@ -186,63 +232,90 @@ const yr = (date: string) => date.slice(0, 4);
 
     <section class="cv-band cv-two" id="papers">
         <div>
-            <div class="cv-band-head"><h2>Education</h2></div>
+            <div class="cv-band-head">
+                <h2>Education</h2>
+            </div>
             {education.map((e) => (
                 <article class="cv-proj cv-proj-tight">
-                    <span class="cv-year">{yr(e.data.endDate)} ~ <br/>  {yr(e.data.startDate)} </span>
+                    <span class="cv-year">
+                        {yr(e.data.endDate)} ~ <br />{" "}
+                        {yr(e.data.startDate)}{" "}
+                    </span>
                     <div>
                         <h3>{e.data.institution}</h3>
-                        <p>{[e.data.degree, e.data.field].filter(Boolean).join(', ')}</p>
+                        <p>
+                            {[e.data.degree, e.data.field]
+                                .filter(Boolean)
+                                .join(", ")}
+                        </p>
                     </div>
                 </article>
             ))}
         </div>
         <div>
-            <div class="cv-band-head"><h2>Published</h2></div>
+            <div class="cv-band-head">
+                <h2>Published</h2>
+            </div>
             {publications.map((p) => (
                 <a class="cv-proj cv-proj-tight" href={p.data.url}>
                     <span class="cv-year">{p.data.year}</span>
                     <div>
                         <h3>{p.data.title}</h3>
-                        <p>{p.data.venue} <Icon class="cv-icon-small" name="ph:arrow-up-right-bold" /></p>
+                        <p>
+                            {p.data.venue}{" "}
+                            <Icon
+                                class="cv-icon-small"
+                                name="ph:arrow-up-right-bold"
+                            />
+                        </p>
                     </div>
                 </a>
             ))}
         </div>
     </section>
 
-    {
-        links.length > 0 && (
-            <section class="cv-band cv-band-alt" id="elsewhere">
-                <div class="cv-band-head">
-                    <h2>Elsewhere</h2>
-                    <span class="cv-tag">{links.length} {links.length === 1 ? 'link' : 'links'}</span>
-                </div>
-                <div>
-                    {links.map((l) => (
-                        <a class="cv-proj cv-link" href={l.url}>
-                            <span class="cv-where"><Icon class="cv-icon-brand" name={l.icon} /></span>
-                            <div>
-                                <h3>{l.title}</h3>
-                                <p>{l.note} <Icon class="cv-icon-small" name="ph:arrow-up-right-bold" /></p>
-                            </div>
-                        </a>
-                    ))}
-                </div>
-            </section>
-        )
-    }
+    {links.length > 0 && (
+        <section class="cv-band cv-band-alt" id="elsewhere">
+            <div class="cv-band-head">
+                <h2>Elsewhere</h2>
+                <span class="cv-tag">
+                    {links.length} {links.length === 1 ? "link" : "links"}
+                </span>
+            </div>
+            <div>
+                {links.map((l) => (
+                    <a class="cv-proj cv-link" href={l.url}>
+                        <span class="cv-where">
+                            <Icon class="cv-icon-brand" name={l.icon} />
+                        </span>
+                        <div>
+                            <h3>{l.title}</h3>
+                            <p>
+                                {l.note}{" "}
+                                <Icon
+                                    class="cv-icon-small"
+                                    name="ph:arrow-up-right-bold"
+                                />
+                            </p>
+                        </div>
+                    </a>
+                ))}
+            </div>
+        </section>
+    )}
 
     <footer class="cv-foot">
-        <span>{about.firstName} {about.lastName} - {currentYear}</span>
+        <span>
+            {about.firstName} {about.lastName} - {currentYear}
+        </span>
         <span>Bodoni Moda 600–700, opsz pinned / Inter</span>
     </footer>
 </div>
 
 <style>
-    @import '../styles/cv-page.css';
+    @import "../styles/cv-page.css";
 </style>
 
 <script>
-   import '../scripts/cv-page.ts';
+    import "../scripts/cv-page.ts";
 </script>

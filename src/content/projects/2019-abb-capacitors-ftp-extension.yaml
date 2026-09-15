@@ -5,10 +5,10 @@ endDate: "2019-12"
 location: Västerås
 featured: false
 description: >
-  Integrating an FTP extension for an existing analysis tool. Objective: integrate
-  the functionality of two separate programs into a single tool, simplifying the
-  user experience, with additional features added to enhance the analysis tool.
+    Integrating an FTP extension for an existing analysis tool. Objective: integrate
+    the functionality of two separate programs into a single tool, simplifying the
+    user experience, with additional features added to enhance the analysis tool.
 tags:
-  - GUI
-  - FTP
-  - LabVIEW
+    - GUI
+    - FTP
+    - LabVIEW

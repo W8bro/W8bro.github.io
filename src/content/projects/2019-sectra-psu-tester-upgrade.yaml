@@ -5,10 +5,10 @@ endDate: "2019-10"
 location: Fagersta
 featured: false
 description: >
-  Upgraded a test station whose electrical safety unit required an update. The test
-  station evaluates both the electrical safety and functionality of Power Supply
-  Units (PSUs).
+    Upgraded a test station whose electrical safety unit required an update. The test
+    station evaluates both the electrical safety and functionality of Power Supply
+    Units (PSUs).
 tags:
-  - LabVIEW
-  - Serial Communication
-  - Security Test
+    - LabVIEW
+    - Serial Communication
+    - Security Test

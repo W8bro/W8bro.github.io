@@ -21,19 +21,39 @@
 //
 // Nothing is lost by hiding it: "See work" points at #c9-projects, which the nav also
 // links to as "Projects", so the destination is still reachable at every width.
-import type { CVData } from './cv-data';
+import type { CVData } from "./cv-data";
 const { data } = Astro.props as { data: CVData };
 const PHOTO = {
-    hero: 'https://picsum.photos/seed/w8bro-mill/1900/1200?grayscale',
-    split: 'https://picsum.photos/seed/w8bro-cell/1400/1600?grayscale',
+    hero: "https://picsum.photos/seed/w8bro-mill/1900/1200?grayscale",
+    split: "https://picsum.photos/seed/w8bro-cell/1400/1600?grayscale",
 };
 const yr = (s: string) => s.slice(0, 4);
 
 const LINKS: { where: string; title: string; note: string; url: string }[] = [
-    { where: 'Spotify', title: 'Bench playlist', note: 'What a test rig sounds like at 2am', url: 'https://open.spotify.com/' },
-    { where: 'Spotify', title: 'Control theory, the podcast', note: 'Long-form, occasionally about bicycles', url: 'https://open.spotify.com/' },
-    { where: 'GitHub', title: 'W8bro', note: 'This Site, and whatever else is half-finished', url: 'https://github.com/W8bro' },
-    { where: 'DiVA', title: 'Thesis, in full', note: 'Cascade control of a riderless bicycle', url: 'https://www.diva-portal.org/' },
+    {
+        where: "Spotify",
+        title: "Bench playlist",
+        note: "What a test rig sounds like at 2am",
+        url: "https://open.spotify.com/",
+    },
+    {
+        where: "Spotify",
+        title: "Control theory, the podcast",
+        note: "Long-form, occasionally about bicycles",
+        url: "https://open.spotify.com/",
+    },
+    {
+        where: "GitHub",
+        title: "W8bro",
+        note: "This Site, and whatever else is half-finished",
+        url: "https://github.com/W8bro",
+    },
+    {
+        where: "DiVA",
+        title: "Thesis, in full",
+        note: "Cascade control of a riderless bicycle",
+        url: "https://www.diva-portal.org/",
+    },
 ];
 ---
 
@@ -45,7 +65,9 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
         </div>
 
         <header class="c9-nav">
-            <a class="is-on" href="#c9-about">Tom</a>
+            <a class="is-on" href="#c9-about">
+                Tom
+            </a>
             <a href="#c9-experience">Experience</a>
             <a href="#c9-projects">Projects</a>
             <a href="#c9-skills">Skills</a>
@@ -63,8 +85,14 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
         <!-- Nature: a narrow right-hand rail, hairline-divided, right-aligned. -->
         <aside class="c9-rail">
             <p>{data.about.bio}</p>
-            <p>{data.projects.length} delivered systems across steel, robotics, medical and process industry — {data.experience.length} positions since 2013.</p>
-            <a class="c9-ghost" href="#">Download CV</a>
+            <p>
+                {data.projects.length} delivered systems across steel, robotics,
+                medical and process industry — {data.experience.length}{" "}
+                positions since 2013.
+            </p>
+            <a class="c9-ghost" href="#">
+                Download CV
+            </a>
         </aside>
     </section>
 
@@ -75,18 +103,33 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
             <div class="c9-photo c9-photo-split">
                 <img src={PHOTO.split} alt="" loading="lazy" />
             </div>
-            <h2 class="c9-huge">BUILT FOR<br />HEAVY<br />INDUSTRY</h2>
-            <p class="c9-sub"><span class="c9-glyph">≋</span> Test systems, control software and robot cell platforms that run on a factory floor</p>
+            <h2 class="c9-huge">
+                BUILT FOR
+                <br />
+                HEAVY
+                <br />
+                INDUSTRY
+            </h2>
+            <p class="c9-sub">
+                <span class="c9-glyph">≋</span> Test systems, control software
+                and robot cell platforms that run on a factory floor
+            </p>
             <div class="c9-inputs">
                 <span>2013</span>
                 <span>Present</span>
                 <span>{data.experience.length} roles</span>
-                <a class="c9-square" href="#c9-projects">See work <span>&#8594;</span></a>
+                <a class="c9-square" href="#c9-projects">
+                    See work <span>&#8594;</span>
+                </a>
             </div>
         </div>
         <div class="c9-split-r">
             <div class="c9-panel-head">
-                <h3>EVERY CHAPTER<br />OF THE WORK</h3>
+                <h3>
+                    EVERY CHAPTER
+                    <br />
+                    OF THE WORK
+                </h3>
                 <span class="c9-count">{data.experience.length}</span>
             </div>
             <div class="c9-roles">
@@ -94,7 +137,10 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
                     <article class="c9-role">
                         <h4>{e.data.company}</h4>
                         <p class="c9-role-meta">{e.data.role}</p>
-                        <p class="c9-role-meta">{yr(e.data.startDate)} — {e.data.endDate} · {e.data.location}</p>
+                        <p class="c9-role-meta">
+                            {yr(e.data.startDate)} — {e.data.endDate} ·{" "}
+                            {e.data.location}
+                        </p>
                     </article>
                 ))}
             </div>
@@ -105,8 +151,12 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
         <div class="c9-band-head">
             <h2>Selected work</h2>
             <div class="c9-tabs">
-                <button type="button" class="is-on" data-c9-tab="f">Cherry picks</button>
-                <button type="button" data-c9-tab="all">All {data.projects.length}</button>
+                <button type="button" class="is-on" data-c9-tab="f">
+                    Cherry picks
+                </button>
+                <button type="button" data-c9-tab="all">
+                    All {data.projects.length}
+                </button>
             </div>
         </div>
         <div class="c9-stack">
@@ -116,7 +166,9 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
                         <span class="c9-year">{yr(p.data.startDate)}</span>
                         <div>
                             <h3>{p.data.title}</h3>
-                            <p>{p.data.client} · {p.data.location}</p>
+                            <p>
+                                {p.data.client} · {p.data.location}
+                            </p>
                         </div>
                         <span class="c9-tag">{p.data.tags[0]}</span>
                     </article>
@@ -128,7 +180,9 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
                         <span class="c9-year">{yr(p.data.startDate)}</span>
                         <div>
                             <h3>{p.data.title}</h3>
-                            <p>{p.data.client} · {p.data.location}</p>
+                            <p>
+                                {p.data.client} · {p.data.location}
+                            </p>
                         </div>
                         <span class="c9-tag">{p.data.tags[0]}</span>
                     </article>
@@ -138,12 +192,14 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
     </section>
 
     <section class="c9-band c9-band-alt" id="c9-skills">
-        <div class="c9-band-head"><h2>Capability</h2></div>
+        <div class="c9-band-head">
+            <h2>Capability</h2>
+        </div>
         <dl class="c9-skills">
             {data.skills.map((c) => (
                 <div>
                     <dt>{c.category}</dt>
-                    <dd>{c.items.join(' · ')}</dd>
+                    <dd>{c.items.join(" · ")}</dd>
                 </div>
             ))}
         </dl>
@@ -151,19 +207,25 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
 
     <section class="c9-band c9-two" id="c9-papers">
         <div>
-            <div class="c9-band-head"><h2>Education</h2></div>
+            <div class="c9-band-head">
+                <h2>Education</h2>
+            </div>
             {data.education.map((e) => (
                 <article class="c9-proj c9-proj-tight">
                     <span class="c9-year">{yr(e.data.endDate)}</span>
                     <div>
                         <h3>{e.data.institution}</h3>
-                        <p>{e.data.degree}, {e.data.field}</p>
+                        <p>
+                            {e.data.degree}, {e.data.field}
+                        </p>
                     </div>
                 </article>
             ))}
         </div>
         <div>
-            <div class="c9-band-head"><h2>Published</h2></div>
+            <div class="c9-band-head">
+                <h2>Published</h2>
+            </div>
             {data.publications.map((p) => (
                 <a class="c9-proj c9-proj-tight" href={p.data.url}>
                     <span class="c9-year">{p.data.year}</span>
@@ -245,7 +307,13 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
         position: relative;
         isolation: isolate;
         overflow: hidden;
-        background: linear-gradient(150deg, #6e5a34 0%, #8a6b3e 34%, #46381f 74%, #2a2114 100%);
+        background: linear-gradient(
+            150deg,
+            #6e5a34 0%,
+            #8a6b3e 34%,
+            #46381f 74%,
+            #2a2114 100%
+        );
     }
     .c9-photo img {
         display: block;
@@ -260,7 +328,12 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
         content: "";
         position: absolute;
         inset: 0;
-        background: linear-gradient(100deg, rgba(42, 33, 20, 0.62) 0%, rgba(42, 33, 20, 0.18) 46%, rgba(42, 33, 20, 0.55) 100%);
+        background: linear-gradient(
+            100deg,
+            rgba(42, 33, 20, 0.62) 0%,
+            rgba(42, 33, 20, 0.18) 46%,
+            rgba(42, 33, 20, 0.55) 100%
+        );
     }
 
     /* ---------- hero ---------- */
@@ -328,7 +401,8 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
         flex-direction: column;
         justify-content: flex-end;
         /* clear the nav: the poster margin climbs the edge, it does not run over it */
-        padding: clamp(5rem, 9vw, 8rem) 0 clamp(1.4rem, 4vw, 3rem) clamp(1.2rem, 3vw, 2.6rem);
+        padding: clamp(5rem, 9vw, 8rem) 0 clamp(1.4rem, 4vw, 3rem)
+            clamp(1.2rem, 3vw, 2.6rem);
         min-width: 0;
     }
     .c9-kicker {
@@ -352,7 +426,9 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
         /* the whole point: heavier stems, and opsz pinned low so Bodoni renders its text
            design rather than the hairline display design it defaults to at this size */
         font-weight: 700;
-        font-variation-settings: "opsz" 14, "wght" 700;
+        font-variation-settings:
+            "opsz" 14,
+            "wght" 700;
         letter-spacing: 0.035em;
         color: var(--terra-lift);
     }
@@ -588,7 +664,9 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
         font-family: "Bodoni Moda", Georgia, serif;
         font-size: clamp(1.9rem, 4.4vw, 3.4rem);
         font-weight: 700;
-        font-variation-settings: "opsz" 18, "wght" 700;
+        font-variation-settings:
+            "opsz" 18,
+            "wght" 700;
         letter-spacing: -0.012em;
     }
     .c9-tabs {
@@ -647,7 +725,9 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
         font-weight: 600;
         /* opsz 8 is the text extreme of Bodoni Moda's optical-size axis: the sturdiest,
            most open cut it has. In a 23-item list that matters more than weight does. */
-        font-variation-settings: "opsz" 8, "wght" 600;
+        font-variation-settings:
+            "opsz" 8,
+            "wght" 600;
         letter-spacing: -0.002em;
         line-height: 1.28;
     }
@@ -701,7 +781,9 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
         font-size: 1.3rem;
         font-weight: 700;
         /* body scale, so the same text cut the assignment list needed */
-        font-variation-settings: "opsz" 8, "wght" 700;
+        font-variation-settings:
+            "opsz" 8,
+            "wght" 700;
         letter-spacing: -0.002em;
         line-height: 1.25;
     }
@@ -817,7 +899,11 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
         // nothing is allowed to still be hidden. Also covers a page too short to scroll.
         const revealTail = () => {
             const doc = document.documentElement;
-            if (window.innerHeight + Math.ceil(window.scrollY) < doc.scrollHeight - 2) return;
+            if (
+                window.innerHeight + Math.ceil(window.scrollY) <
+                doc.scrollHeight - 2
+            )
+                return;
             targets.forEach(show);
         };
         window.addEventListener("scroll", revealTail, { passive: true });
@@ -826,8 +912,12 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
         // yet, so scrollHeight can still equal innerHeight - revealTail would then decide
         // the page was already fully scrolled and reveal everything at once. Wait until
         // layout has settled, which also covers a page genuinely too short to scroll.
-        if (document.readyState === "complete") requestAnimationFrame(revealTail);
-        else window.addEventListener("load", () => requestAnimationFrame(revealTail));
+        if (document.readyState === "complete")
+            requestAnimationFrame(revealTail);
+        else
+            window.addEventListener("load", () =>
+                requestAnimationFrame(revealTail),
+            );
     }
 
     const tabs = document.querySelectorAll<HTMLButtonElement>("[data-c9-tab]");
@@ -835,12 +925,15 @@ const LINKS: { where: string; title: string; note: string; url: string }[] = [
     tabs.forEach((t) =>
         t.addEventListener("click", () => {
             tabs.forEach((o) => o.classList.toggle("is-on", o === t));
-            panels.forEach((p) => (p.hidden = p.dataset.c9Panel !== t.dataset.c9Tab));
+            panels.forEach(
+                (p) => (p.hidden = p.dataset.c9Panel !== t.dataset.c9Tab),
+            );
             panels.forEach((p) => {
                 if (p.hidden) return;
-                p.querySelectorAll("[data-reveal]").forEach((el) => el.classList.add("is-in"));
+                p.querySelectorAll("[data-reveal]").forEach((el) =>
+                    el.classList.add("is-in"),
+                );
             });
         }),
     );
-
 </script>

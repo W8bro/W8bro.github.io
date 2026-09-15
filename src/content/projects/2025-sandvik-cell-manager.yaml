@@ -5,14 +5,14 @@ endDate: "2026-01"
 location: Västerås
 featured: true
 description: >
-  Currently ongoing project with Sandvik Rock Tools developing a new iteration on
-  Prevas' in-house Cell Manager (CM) software.
+    Currently ongoing project with Sandvik Rock Tools developing a new iteration on
+    Prevas' in-house Cell Manager (CM) software.
 tags:
-  - WPF
-  - SQL
-  - C#
-  - Entity Framework
-  - MVVM
-  - MQTT
-  - Azure Pipelines
-  - OPC/UA
+    - WPF
+    - SQL
+    - C#
+    - Entity Framework
+    - MVVM
+    - MQTT
+    - Azure Pipelines
+    - OPC/UA

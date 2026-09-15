@@ -12,36 +12,35 @@
     -webkit-font-smoothing: antialiased;
 }
 
-/* Every photograph is duotoned into the earth/gold range in CSS, so source images
-       can be plain frames — see src/data/photos.ts. */
 /* Reveal on scroll. Scoped to .reveal-ready, a class only the script adds, so with
-       JS off nothing is ever hidden. Uses the independent `translate` property rather than
-       `transform`, because the rotated wordmark already owns `transform: rotate(180deg)`
-       and animating transform would flatten it. Print overrides live at the bottom. */
+   JS off nothing is ever hidden. Uses the independent `translate` property rather than
+   `transform`, because the rotated wordmark already owns `transform: rotate(180deg)`
+   and animating transform would flatten it. Print overrides live at the bottom. */
 .cv.reveal-ready [data-reveal] {
     opacity: 0;
-    translate: 0 14px;
     transition:
         opacity 0.75s cubic-bezier(0.2, 0.6, 0.2, 1),
         translate 0.75s cubic-bezier(0.2, 0.6, 0.2, 1);
+    translate: 0 14px;
 }
+
 .cv.reveal-ready [data-reveal].is-in {
     opacity: 1;
     translate: none;
 }
+
 @media (prefers-reduced-motion: reduce) {
     .cv.reveal-ready [data-reveal],
     .cv.reveal-ready [data-reveal].is-in {
         opacity: 1;
-        translate: none;
         transition: none;
+        translate: none;
     }
 }
 
+/* Every photograph is duotoned into the earth/gold range in CSS, so source images
+   can be plain frames — see src/data/photos.ts. */
 .cv-photo {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
     background: linear-gradient(
         150deg,
         #6e5a34 0%,
@@ -49,377 +48,411 @@
         #46381f 74%,
         #2a2114 100%
     );
+    isolation: isolate;
+    overflow: hidden;
+    position: relative;
 }
+
 .cv-photo img {
     display: block;
-    width: 100%;
     height: 100%;
-    object-fit: cover;
     mix-blend-mode: luminosity;
+    object-fit: cover;
     opacity: 0.95;
+    width: 100%;
 }
+
 /* the fade that keeps overlaid text legible */
 .cv-photo::after {
-    content: "";
-    position: absolute;
-    inset: 0;
     background: linear-gradient(
         100deg,
-        rgba(42, 33, 20, 0.62) 0%,
-        rgba(42, 33, 20, 0.18) 46%,
-        rgba(42, 33, 20, 0.55) 100%
+        rgb(42, 33, 20, 0.62) 0%,
+        rgb(42, 33, 20, 0.18) 46%,
+        rgb(42, 33, 20, 0.55) 100%
     );
+    content: "";
+    inset: 0;
+    position: absolute;
 }
 
 /* ---------- hero ---------- */
 .cv-hero {
-    position: relative;
+    color: var(--paper);
+    display: flex;
     min-height: clamp(500px, 96vh, 980px);
     min-height: clamp(500px, 96svh, 980px);
-    display: flex;
     overflow: hidden;
-    color: var(--paper);
+    position: relative;
 }
+
 .cv-photo-hero {
-    position: absolute;
     inset: 0;
+    position: absolute;
     z-index: 0;
 }
+
 /* An even, deeper grade across the whole frame rather than a fade down one edge: a
-       one-sided scrim covered the top-left nav links. */
+   one-sided scrim covered the top-left nav links. */
 .cv-photo-hero::after {
     background: linear-gradient(
         176deg,
-        rgba(38, 28, 16, 0.6) 0%,
-        rgba(38, 28, 16, 0.46) 42%,
-        rgba(38, 28, 16, 0.52) 72%,
-        rgba(38, 28, 16, 0.66) 100%
+        rgb(38, 28, 16, 0.6) 0%,
+        rgb(38, 28, 16, 0.46) 42%,
+        rgb(38, 28, 16, 0.52) 72%,
+        rgb(38, 28, 16, 0.66) 100%
     );
 }
+
 .cv-nav {
-    position: absolute;
-    /* Must stay above .cv-margin. That poster-margin column is full height and comes
-           later in the DOM, so at equal z-index it swallows clicks on the nav links.
-           Do not lower this. */
-    z-index: 4;
-    top: clamp(1.2rem, 3vw, 2.4rem);
-    left: clamp(1.2rem, 3vw, 2.6rem);
-    right: clamp(1.2rem, 3vw, 2.6rem);
-    display: flex;
     align-items: center;
-    gap: clamp(0.9rem, 2.4vw, 2rem);
+    display: flex;
     font-size: 1.02rem;
     font-weight: 400;
+    gap: clamp(0.9rem, 2.4vw, 2rem);
+    left: clamp(1.2rem, 3vw, 2.6rem);
+    position: absolute;
+    right: clamp(1.2rem, 3vw, 2.6rem);
+    top: clamp(1.2rem, 3vw, 2.4rem);
+
+    /* Must stay above .cv-margin. That poster-margin column is full height and comes
+       later in the DOM, so at equal z-index it swallows clicks on the nav links.
+       Do not lower this. */
+    z-index: 4;
 }
+
 .cv-nav a {
     color: var(--paper);
     text-decoration: none;
 }
+
 .cv-nav a.is-on {
-    color: var(--terra-lift);
     border-bottom: 1px solid var(--terra-lift);
-}
-.cv-glyph {
-    margin-left: auto;
-    font-size: 1.6rem;
     color: var(--terra-lift);
+}
+
+.cv-glyph {
+    color: var(--terra-lift);
+    font-size: 1.6rem;
+    margin-left: auto;
 }
 
 /* Nature's poster margin. */
 .cv-margin {
-    position: relative;
-    z-index: 2;
-    isolation: isolate;
-    /* nothing here is interactive, so it must never take a click */
-    pointer-events: none;
     display: flex;
     flex-direction: column;
+    isolation: isolate;
     justify-content: flex-end;
+    min-width: 0;
+
     /* clear the nav: the margin climbs the edge, it does not run over it */
     padding: clamp(5rem, 9vw, 8rem) 0 clamp(1.4rem, 4vw, 3rem)
         clamp(1.2rem, 3vw, 2.6rem);
-    min-width: 0;
+
+    /* nothing here is interactive, so it must never take a click */
+    pointer-events: none;
+    position: relative;
+    z-index: 2;
+
     /* One shared scale for the name pair. Both derive from this, so their ratio is
-        fixed at every viewport size. Two separate clamps would reach their bounds at
-        different widths and the proportion would drift. */
+       fixed at every viewport size. Two separate clamps would reach their bounds at
+       different widths and the proportion would drift. */
     --name-scale: clamp(2rem, min(5.4vw, 6.6vh), 5.4rem);
 }
-.cv-kicker {
-    font-weight: 150;
-    font-size: calc(var(--name-scale) * 0.9);
-    line-height: 0.9;
-    max-width: 7ch;
-    margin-bottom: 0.7rem;
-    letter-spacing: -0.1em;
-}
-.cv-word {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    font-family: "Bodoni Moda", Georgia, serif;
-    font-weight: 700;
 
-    font-size: var(--name-scale);
+.cv-kicker {
+    font-size: calc(var(--name-scale) * 0.9);
+    font-weight: 150;
+    letter-spacing: -0.1em;
     line-height: 0.9;
-    /* Bodoni Moda is a didone: its opsz axis picks a hairline display cut at large
-           sizes, which is illegible rotated. Pinning opsz low forces the sturdier text
-           cut. Keep both this and the weight — dropping either brings the hairlines back. */
-    font-weight: 700;
+    margin-bottom: 0.7rem;
+    max-width: 7ch;
+}
+
+.cv-word {
+    color: var(--terra-lift);
+    font-family: "Bodoni Moda", Georgia, serif;
+    font-size: var(--name-scale);
     font-variation-settings:
         "opsz" 14,
         "wght" 700;
+
+    /* Bodoni Moda is a didone: its opsz axis picks a hairline display cut at large
+       sizes, which is illegible rotated. Pinning opsz low forces the sturdier text
+       cut. Keep both this and the weight — dropping either brings the hairlines back. */
+    font-weight: 700;
     letter-spacing: 0.035em;
-    color: var(--terra-lift);
+    line-height: 0.9;
+    transform: rotate(180deg);
+    writing-mode: vertical-rl;
 }
 
 /* Nature's right-hand rail. */
 .cv-rail {
-    position: relative;
-    z-index: 2;
-    margin: auto 0 clamp(1.4rem, 4vw, 3rem) auto;
-    width: min(34ch, 34vw);
-    padding-right: clamp(1.2rem, 3vw, 2.6rem);
-    padding-top: clamp(5rem, 9vw, 8rem);
-    text-align: right;
+    align-items: flex-end;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
     gap: 1.1rem;
+    margin: auto 0 clamp(1.4rem, 4vw, 3rem) auto;
+    padding-right: clamp(1.2rem, 3vw, 2.6rem);
+    padding-top: clamp(5rem, 9vw, 8rem);
+    position: relative;
+    text-align: right;
     white-space: pre-line; /* newlines in the text become breaks */
+    width: min(34ch, 34vw);
+    z-index: 2;
 }
+
 .cv-rail p {
-    margin: 0;
-    padding-bottom: 1.1rem;
-    border-bottom: 1px solid rgba(251, 247, 241, 0.35);
+    border-bottom: 1px solid rgb(251, 247, 241, 0.35);
     font-size: 0.92rem;
     font-weight: 300;
     line-height: 1.55;
+    margin: 0;
+    padding-bottom: 1.1rem;
 }
+
 .cv-ghost {
-    border: 1px solid rgba(251, 247, 241, 0.55);
+    border: 1px solid rgb(251, 247, 241, 0.55);
     border-radius: 999px;
-    padding: 0.62rem 1.3rem;
-    font-size: 0.8rem;
     color: var(--paper);
+    font-size: 0.8rem;
+    padding: 0.62rem 1.3rem;
     text-decoration: none;
 }
+
 .cv-ghost:hover {
-    background: rgba(251, 247, 241, 0.14);
+    background: rgb(251, 247, 241, 0.14);
 }
 
 /* ---------- Wooden split ---------- */
 .cv-split {
-    display: grid;
-    grid-template-columns: 1fr minmax(320px, 38%);
-    gap: 10px;
-    padding: 10px;
     background: #100f0d;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 1fr minmax(320px, 38%);
+    padding: 10px;
 }
+
 .cv-split-l {
-    /* query container for the chip row below; see the note at the top of this file */
-    container-type: inline-size;
-    container-name: panel;
-    position: relative;
-    min-height: min(82vh, 820px);
     border-radius: 20px;
-    overflow: hidden;
-    padding: clamp(1.4rem, 3.4vw, 3rem);
+    color: var(--paper);
+    container-name: panel;
+
+    /* query container for the chip row below; see the `Measured:` note above
+       @container panel */
+    container-type: inline-size;
     display: flex;
     flex-direction: column;
-    color: var(--paper);
-}
-.cv-photo-split {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    border-radius: 20px;
-}
-.cv-huge {
+    min-height: min(82vh, 820px);
+    overflow: hidden;
+    padding: clamp(1.4rem, 3.4vw, 3rem);
     position: relative;
-    z-index: 1;
-    margin: 0;
+}
+
+.cv-photo-split {
+    border-radius: 20px;
+    inset: 0;
+    position: absolute;
+    z-index: 0;
+}
+
+.cv-huge {
     font-size: clamp(2.5rem, 8.2vw, 7rem);
     font-weight: 200;
-    line-height: 0.94;
     letter-spacing: -0.045em;
+    line-height: 0.94;
+    margin: 0;
+    position: relative;
+    z-index: 1;
 }
 
 .cv-subs {
-    position: relative;
-    z-index: 1;
-    margin: auto 0 1.1rem;
+    align-items: flex-start; /* keeps fit-content panels from stretching */
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* keeps fit-content panels from stretching */
     gap: 0.6rem;
+    margin: auto 0 1.1rem;
+    position: relative;
+    z-index: 1;
 }
 
 .cv-sub {
-    margin: 0;
-    position: relative;
-    margin: auto 0 1.1rem;
-    max-width: 41ch;
-    display: flex;
     align-items: center;
-    gap: 0.7rem;
+    display: flex;
     font-size: 0.92rem;
     font-weight: 300;
+    gap: 0.7rem;
     line-height: 1.5;
+    margin: auto 0 1.1rem;
+    max-width: 41ch;
+    position: relative;
 }
 
 .cv-sub .cv-glyph {
-    margin-left: 0;
     line-height: 1;
+    margin-left: 0;
     translate: 0 -0.06em;
 }
+
 /* mirrored: sits against the right edge, glyph on the outside */
 .cv-sub-end {
-    margin-left: auto;
     flex-direction: row-reverse;
+    margin-left: auto;
     text-align: right;
 }
+
 /* Wooden: frosted-glass inputs floating over the photograph beside a hard white
-       square button. */
+   square button. */
 .cv-inputs {
-    position: relative;
-    z-index: 1;
+    align-items: stretch;
     display: flex;
     flex-wrap: wrap;
     gap: 0.6rem;
-    align-items: stretch;
+    position: relative;
+    z-index: 1;
 }
+
 /* Direct children only — the arrow inside .cv-square is a span too. */
 .cv-inputs > span {
-    border-radius: 10px;
-    padding: 0.95rem 1.5rem;
-    background: rgba(251, 247, 241, 0.12);
-    backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    box-shadow: inset 0 0 0 1px rgba(251, 247, 241, 0.18);
+    backdrop-filter: blur(14px);
+    background: rgb(251, 247, 241, 0.12);
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 1px rgb(251, 247, 241, 0.18);
     font-size: 0.88rem;
+    padding: 0.95rem 1.5rem;
 }
+
 /* Frosted glass matching the chips beside it, kept distinct by a brighter hairline
-       and an arrow rather than by a block of white. */
+   and an arrow rather than by a block of white. */
 .cv-square {
-    margin-left: auto;
-    display: inline-flex;
     align-items: center;
-    gap: 0.65rem;
-    border-radius: 10px;
-    padding: 0.95rem 1.4rem;
-    background: rgba(251, 247, 241, 0.17);
-    backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    box-shadow: inset 0 0 0 1px rgba(251, 247, 241, 0.45);
+    backdrop-filter: blur(14px);
+    background: rgb(251, 247, 241, 0.17);
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 1px rgb(251, 247, 241, 0.45);
     color: var(--paper);
-    text-decoration: none;
+    display: inline-flex;
     font-size: 0.88rem;
     font-weight: 500;
+    gap: 0.65rem;
+    margin-left: auto;
+    padding: 0.95rem 1.4rem;
+    text-decoration: none;
     transition:
         background 0.3s ease,
         box-shadow 0.3s ease;
 }
+
 .cv-square span {
     color: var(--terra-lift);
     transition: translate 0.3s ease;
 }
+
 .cv-square:hover {
-    background: rgba(251, 247, 241, 0.27);
-    box-shadow: inset 0 0 0 1px rgba(251, 247, 241, 0.7);
+    background: rgb(251, 247, 241, 0.27);
+    box-shadow: inset 0 0 0 1px rgb(251, 247, 241, 0.7);
 }
+
 .cv-square:hover span {
     translate: 3px 0;
 }
 
 /* Measured: chips 272px + button 130px + three 0.6rem gaps 29px = 431px of panel
-       content box. Hidden at 470px so the button goes just before it would wrap under the
-       chips rather than on the same frame. Re-measure if the chip labels or the typeface
-       change. Container query, not a media query: the panel is a fraction of the viewport
-       on desktop but full width below 960px. */
+   content box. Hidden at 510px so the button goes just before it would wrap under the
+   chips rather than on the same frame. Re-measure if the chip labels or the typeface
+   change. Container query, not a media query: the panel is a fraction of the viewport
+   on desktop but full width below 990px. */
 @container panel (max-width: 510px) {
     .cv-square {
         display: none;
     }
+
     .cv-principle {
-        grid-template-columns: 1fr;
         gap: 0.2rem;
+        grid-template-columns: 1fr;
     }
 }
+
 /* Fallback for engines without container queries. */
 @supports not (container-type: inline-size) {
     @media (max-width: 535px) {
         .cv-square {
             display: none;
         }
+
         .cv-principles li {
-            grid-template-columns: 1fr;
             gap: 0.2rem;
+            grid-template-columns: 1fr;
         }
     }
 }
 
 /* The principle list sits between .cv-sub and .cv-inputs, over the photograph, so it
-       needs the same z-index lift every other .cv-split-l child has. Hairline-divided
-       rows rather than frosted chips — six chips of prose would out-weigh the headline. */
+   needs the same z-index lift every other .cv-split-l child has. Hairline-divided
+   rows rather than frosted chips — six chips of prose would out-weigh the headline. */
 .cv-principles {
-    position: relative;
-    z-index: 1;
     margin: 0 0 1.6rem;
     max-width: 46ch;
+    position: relative;
+    z-index: 1;
 }
 
 .cv-principle-track {
-    margin: 0;
-    padding: 0;
-    list-style: none;
     display: grid;
     gap: 0.55rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .cv-principle {
-    display: grid;
-    grid-template-columns: 13ch 1fr;
-    gap: 0.9rem;
     align-items: baseline;
-    padding-top: 0.55rem;
-    border-top: 1px solid rgba(251, 247, 241, 0.18);
+    border-top: 1px solid rgb(251, 247, 241, 0.18);
+    color: rgb(251, 247, 241, 0.82);
+    display: grid;
     font-size: 0.86rem;
     font-weight: 300;
+    gap: 0.9rem;
+    grid-template-columns: 13ch 1fr;
     line-height: 1.45;
-    color: rgba(251, 247, 241, 0.82);
+    padding-top: 0.55rem;
 }
 
 /* ---- carousel mode. .is-live is added by the script, so with JS off (and in the
-       PDF, where the script's effect is reverted below) every principle stays visible
-       as a plain hairline-divided list. ---- */
+   PDF, where the script's effect is reverted below) every principle stays visible
+   as a plain hairline-divided list. ---- */
 .cv-principles.is-live {
     max-width: none;
 }
 
 .cv-principles.is-live .cv-principle-track {
     gap: 0;
-    /* reserve the tallest slide so the chip row beneath never jumps */
 }
 
 .cv-principles.is-live .cv-principle {
-    grid-area: 1 / 1;
-    max-width: min(100%, 44ch);
-    /* one at a time — the label becomes a kicker above the line, not a column beside it */
-    grid-template-columns: 1fr;
-    gap: 0.55rem;
     align-items: start;
-    padding-top: 0;
     border-top: 0;
+    color: var(--paper);
     font-size: clamp(1.1rem, 3cqi, 2.1rem);
     font-weight: 200;
-    line-height: 1.3;
+    gap: 0.55rem;
+    grid-area: 1 / 1;
+
+    /* one at a time — the label becomes a kicker above the line, not a column beside it */
+    grid-template-columns: 1fr;
     letter-spacing: -0.015em;
-    color: var(--paper);
+    line-height: 1.3;
+    max-width: min(100%, 44ch);
     opacity: 0;
-    translate: 0 6px;
+    padding-top: 0;
     transition:
         opacity 0.55s ease,
         translate 0.55s ease;
+    translate: 0 6px;
 }
+
 .cv-principles.is-live .cv-principle.is-on {
     opacity: 1;
     translate: 0 0;
@@ -430,311 +463,343 @@
     gap: 0.4rem;
     margin-top: 0.9rem;
 }
+
 .cv-principle-dots button {
-    width: 16px;
-    height: 3px;
-    padding: 0;
+    background: rgb(251, 247, 241, 0.25);
     border: 0;
     border-radius: 2px;
-    background: rgba(251, 247, 241, 0.25);
     cursor: pointer;
+    height: 3px;
+    padding: 0;
     transition: background 0.3s ease;
+    width: 16px;
 }
+
 .cv-principle-dots button.is-on {
     background: var(--terra-lift);
 }
+
 .cv-principle-dots button:focus-visible {
     outline: 2px solid var(--terra-lift);
     outline-offset: 3px;
 }
 
 .cv-principles li {
-    display: grid;
-    grid-template-columns: 13ch 1fr;
-    gap: 0.9rem;
     align-items: baseline;
-    padding-top: 0.55rem;
-    border-top: 1px solid rgba(251, 247, 241, 0.18);
+    border-top: 1px solid rgb(251, 247, 241, 0.18);
+    color: rgb(251, 247, 241, 0.82);
+    display: grid;
     font-size: 0.86rem;
     font-weight: 300;
+    gap: 0.9rem;
+    grid-template-columns: 13ch 1fr;
     line-height: 1.45;
-    color: rgba(251, 247, 241, 0.82);
+    padding-top: 0.55rem;
 }
+
 .cv-principle-label {
     color: var(--terra-lift);
     font-size: 0.7rem;
     font-weight: 500;
     letter-spacing: 0.1em;
-    text-transform: uppercase;
+
     /* the label column is fixed-width; long labels wrap rather than push the line */
     overflow-wrap: anywhere;
+    text-transform: uppercase;
 }
 
 .cv-split-l::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 0;
     background: linear-gradient(
         to top,
-        rgba(16, 15, 13, 0.72) 0%,
-        rgba(16, 15, 13, 0.35) 45%,
+        rgb(16, 15, 13, 0.72) 0%,
+        rgb(16, 15, 13, 0.35) 45%,
         transparent 75%
     );
+    content: "";
+    inset: 0;
     pointer-events: none;
+    position: absolute;
+    z-index: 0;
 }
 
 .cv-split-r {
-    border-radius: 20px;
     background: var(--charcoal);
+    border-radius: 20px;
     color: var(--paper);
-    padding: clamp(1.4rem, 3vw, 2.4rem);
     display: flex;
     flex-direction: column;
+    padding: clamp(1.4rem, 3vw, 2.4rem);
 }
+
 .cv-panel-head {
-    display: flex;
     align-items: flex-start;
+    display: flex;
     gap: 1rem;
 }
+
 .cv-panel-head h3 {
-    margin: 0;
     font-size: clamp(1.05rem, 1.5vw, 1.3rem);
     font-weight: 400;
     letter-spacing: -0.01em;
     line-height: 1.2;
+    margin: 0;
 }
+
 .cv-count {
-    margin-left: auto;
+    color: rgb(251, 247, 241, 0.5);
     font-family: "Bodoni Moda", Georgia, serif;
-    font-weight: 600;
-    font-variation-settings: "opsz" 16;
     font-size: 1.5rem;
-    color: rgba(251, 247, 241, 0.5);
+    font-variation-settings: "opsz" 16;
+    font-weight: 600;
     line-height: 1;
+    margin-left: auto;
 }
 
 .cv-roles {
-    margin-top: 1.6rem;
     display: flex;
     flex-direction: column;
+    margin-top: 1.6rem;
 }
+
 .cv-role {
+    border-top: 1px solid rgb(251, 247, 241, 0.16);
     padding: 0.95rem 0;
-    border-top: 1px solid rgba(251, 247, 241, 0.16);
 }
+
 .cv-role:last-child {
-    border-bottom: 1px solid rgba(251, 247, 241, 0.16);
+    border-bottom: 1px solid rgb(251, 247, 241, 0.16);
 }
+
 .cv-role h4 {
-    margin: 0;
     font-family: "Bodoni Moda", Georgia, serif;
     font-size: clamp(1.15rem, 1.7vw, 1.45rem);
-    font-weight: 600;
     font-variation-settings: "opsz" 16;
+    font-weight: 600;
     letter-spacing: -0.005em;
+    margin: 0;
 }
+
 .cv-role-meta {
-    margin: 0.2rem 0 0;
+    color: rgb(251, 247, 241, 0.6);
     font-size: 0.86rem;
     font-weight: 300;
-    color: rgba(251, 247, 241, 0.6);
+    margin: 0.2rem 0 0;
 }
 
 /* ---------- bands ---------- */
 .cv-band {
-    padding: clamp(3.4rem, 8vw, 7rem) clamp(1.2rem, 4vw, 4.5rem);
-    max-width: 1500px;
     margin: 0 auto;
+    max-width: 1500px;
+    padding: clamp(3.4rem, 8vw, 7rem) clamp(1.2rem, 4vw, 4.5rem);
 }
+
 .cv-band-alt {
     background: var(--paper-alt);
     max-width: none;
 }
+
 .cv-band-head {
-    display: flex;
     align-items: baseline;
-    justify-content: space-between;
+    border-bottom: 1px solid rgb(34, 32, 29, 0.2);
+    display: flex;
     gap: 1rem;
+    justify-content: space-between;
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(34, 32, 29, 0.2);
 }
+
 .cv-band-head h2 {
-    margin: 0;
     font-family: "Bodoni Moda", Georgia, serif;
     font-size: clamp(1.9rem, 4.4vw, 3.4rem);
-    font-weight: 700;
     font-variation-settings:
         "opsz" 18,
         "wght" 700;
+    font-weight: 700;
     letter-spacing: -0.012em;
+    margin: 0;
 }
+
 .cv-tabs {
     display: flex;
     gap: 1.3rem;
 }
+
 .cv-tabs button {
-    border: 0;
     background: transparent;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    color: rgb(34, 32, 29, 0.45);
+    cursor: pointer;
     font: inherit;
     font-size: 0.86rem;
-    color: rgba(34, 32, 29, 0.45);
     padding: 0.2rem 0;
-    border-bottom: 1px solid transparent;
-    cursor: pointer;
 }
+
 .cv-tabs button.is-on {
-    color: var(--terra);
     border-bottom-color: var(--terra);
+    color: var(--terra);
 }
 
 .cv-stack {
     display: grid;
 }
+
 .cv-stack > * {
     grid-area: 1 / 1;
 }
+
 .cv-stack > [hidden] {
     display: none;
 }
+
 .cv-proj {
-    display: grid;
-    grid-template-columns: 6ch 1fr auto;
-    gap: 1.6rem;
     align-items: baseline;
-    padding: 1.25rem 0;
-    border-bottom: 1px solid rgba(34, 32, 29, 0.13);
-    text-decoration: none;
+    border-bottom: 1px solid rgb(34, 32, 29, 0.13);
     color: inherit;
+    display: grid;
+    gap: 1.6rem;
+    grid-template-columns: 6ch 1fr auto;
+    padding: 1.25rem 0;
+    text-decoration: none;
 }
+
 .cv-proj-tight {
     grid-template-columns: 6ch 1fr;
 }
+
 .cv-year {
+    color: var(--terra-deep);
     font-family: "Bodoni Moda", Georgia, serif;
     font-size: 1.05rem;
-    font-weight: 600;
     font-variation-settings: "opsz" 8;
-    color: var(--terra-deep);
+    font-weight: 600;
 }
+
 .cv-proj h3 {
-    margin: 0;
-    max-width: 62ch;
     font-family: "Bodoni Moda", Georgia, serif;
     font-size: clamp(1.14rem, 2vw, 1.62rem);
-    font-weight: 600;
+
     /* opsz 8 is the text extreme of the optical-size axis — the sturdiest, most open
-           cut. At body scale in a long list this matters more than weight does. */
+       cut. At body scale in a long list this matters more than weight does. */
     font-variation-settings:
         "opsz" 8,
         "wght" 600;
+    font-weight: 600;
     letter-spacing: -0.002em;
     line-height: 1.28;
+    margin: 0;
+    max-width: 62ch;
 }
+
 .cv-proj p {
-    margin: 0.34rem 0 0;
+    color: rgb(34, 32, 29, 0.8);
     font-size: 0.88rem;
     font-weight: 400;
-    color: rgba(34, 32, 29, 0.8);
+    margin: 0.34rem 0 0;
 }
+
 .cv-proj:hover h3 {
     color: var(--terra);
 }
+
 .cv-tag {
+    color: rgb(34, 32, 29, 0.62);
     font-size: 0.7rem;
     font-weight: 500;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(34, 32, 29, 0.62);
     white-space: nowrap;
 }
 
 /* Elsewhere reuses the assignment-row idiom so the band reads as native. */
 .cv-where {
-    display: flex;
     align-items: center;
-    justify-content: center;
     align-self: center;
     color: var(--terra-deep);
+    display: flex;
+    justify-content: center;
 }
+
 /* brand marks track the cap height of the label rather than a fixed rem */
 .cv-icon-brand {
     color: var(--terra-deep);
-    width: 2.5em;
-    height: 2.5em;
     flex: none;
+    height: 2.5em;
+    width: 2.5em;
 }
 
 .cv-link:hover h3 {
     color: var(--terra);
 }
-.cv-arrow {
-    font-size: 0.95rem;
-    letter-spacing: 0;
-}
 
 .cv-icon {
+    height: 1.5rem;
     vertical-align: -0.5em;
     width: 1.5rem;
-    height: 1.5rem;
 }
+
 .cv-icon-button {
-    margin-left: 0.5em;
-    width: 1.6rem;
     height: 1.6rem;
+    margin-left: 0.5em;
     vertical-align: -0.65em;
+    width: 1.6rem;
 }
+
 .cv-icon-small {
+    height: 0.95rem;
     vertical-align: -0.2em;
     width: 0.95rem;
-    height: 0.95rem;
 }
 
 .cv-skills {
     margin: 0;
     max-width: 1500px;
 }
+
 .cv-skills > div {
+    border-bottom: 1px solid rgb(34, 32, 29, 0.13);
     display: grid;
-    grid-template-columns: minmax(160px, 22%) 1fr;
     gap: 1.6rem;
+    grid-template-columns: minmax(160px, 22%) 1fr;
     padding: 1.3rem 0;
-    border-bottom: 1px solid rgba(34, 32, 29, 0.13);
 }
+
 .cv-skills dt {
     font-family: "Bodoni Moda", Georgia, serif;
     font-size: 1.3rem;
-    font-weight: 700;
+
     /* body scale, so the same text cut the assignment list needs */
     font-variation-settings:
         "opsz" 8,
         "wght" 700;
+    font-weight: 700;
     letter-spacing: -0.002em;
     line-height: 1.25;
 }
+
 .cv-skills dd {
-    margin: 0;
+    color: rgb(34, 32, 29, 0.86);
     font-weight: 400;
     line-height: 1.7;
-    color: rgba(34, 32, 29, 0.86);
+    margin: 0;
 }
 
 .cv-two {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     gap: clamp(1.6rem, 5vw, 4.5rem);
+    grid-template-columns: 1fr 1fr;
 }
+
 .cv-foot {
+    border-top: 1px solid rgb(34, 32, 29, 0.2);
+    color: rgb(34, 32, 29, 0.5);
     display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1.4rem clamp(1.2rem, 4vw, 4.5rem);
-    border-top: 1px solid rgba(34, 32, 29, 0.2);
     font-size: 0.68rem;
+    gap: 1rem;
+    justify-content: space-between;
     letter-spacing: 0.1em;
+    padding: 1.4rem clamp(1.2rem, 4vw, 4.5rem);
     text-transform: uppercase;
-    color: rgba(34, 32, 29, 0.5);
 }
 
 @media (max-width: 990px) {
@@ -743,31 +808,36 @@
     .cv-skills > div {
         grid-template-columns: 1fr;
     }
+
     .cv-rail {
         display: none;
     }
+
     .cv-word {
         font-size: clamp(2.6rem, 15vw, 5rem);
     }
+
     .cv-tag {
         display: none;
     }
+
     .cv-margin {
         --name-scale: clamp(2.6rem, 15vw, 5rem);
     }
 }
+
 /* ------------------------------------------------------------------
-       PRINT / PDF. The Pipeline generates dist/cv.pdf by loading this page
-       in headless Chromium and calling page.pdf(), which does NOT scroll.
-       Without the first rule below every revealed element would still be at
-       opacity 0 and the PDF would come out blank.
-       ------------------------------------------------------------------ */
+   PRINT / PDF. The Pipeline generates dist/cv.pdf by loading this page
+   in headless Chromium and calling page.pdf(), which does NOT scroll.
+   Without the first rule below every revealed element would still be at
+   opacity 0 and the PDF would come out blank.
+   ------------------------------------------------------------------ */
 @media print {
     .cv.reveal-ready [data-reveal],
     .cv.reveal-ready [data-reveal].is-in {
         opacity: 1 !important;
-        translate: none !important;
         transition: none !important;
+        translate: none !important;
     }
 
     /* screen-only affordances */
@@ -781,43 +851,49 @@
 
     /* the hero is a cover page; everything after it flows as documents do */
     .cv-hero {
+        break-after: page;
         min-height: auto;
         page-break-after: always;
-        break-after: page;
     }
+
     .cv-split {
         grid-template-columns: 1fr;
     }
+
     /* a row should not be split across two pages */
     .cv-proj,
     .cv-role,
     .cv-skills > div {
-        page-break-inside: avoid;
         break-inside: avoid;
+        page-break-inside: avoid;
     }
+
     .cv-band-head {
-        page-break-after: avoid;
         break-after: avoid;
+        page-break-after: avoid;
     }
 
     /* NB: the projects tabs are switched by scripts/generate-pdf.ts, not here.
-           Tailwind preflight ships [hidden]{display:none!important} inside @layer base,
-           and a layered !important beats an unlayered one, so a rule here could not win
-           against the hidden attribute. See that script for the detail. */
+       Tailwind preflight ships [hidden]{display:none!important} inside @layer base,
+       and a layered !important beats an unlayered one, so a rule here could not win
+       against the hidden attribute. See that script for the detail. */
 
     .cv-principles.is-live .cv-principle-track {
         gap: 0.55rem;
-        min-height: 0;
     }
+
     .cv-principles.is-live .cv-principle {
         grid-area: auto;
         opacity: 1 !important;
         translate: none !important;
     }
+
     .cv-principle-dots {
         display: none !important;
     }
+
     .cv-split-l {
+        /* six rows no longer fit 22rem */
         min-height: 30rem;
     }
 }

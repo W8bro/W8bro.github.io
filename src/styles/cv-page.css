@@ -13,8 +13,9 @@
    Three orderings are load-bearing and a tidy-up can silently break them:
      - .cv-photo::after must precede .cv-photo-hero::after (equal specificity, and the
        hero rule only declares `background` — it inherits the rest).
-     - The @container block in section 5 must follow .cv-principle in section 4 (equal
-       specificity, so source order is the only thing that makes the override win).
+     - The narrow-panel overrides in section 5 (the @container block and the @supports
+       fallback) must follow .cv-principle in section 4 (equal specificity, so source
+       order is the only thing that makes them win).
      - .cv-band must precede .cv-band-alt.
    The z-index on .cv-nav and the font-variation-settings on every Bodoni rule are
    load-bearing too, but those are noted at the rules themselves. */
@@ -528,14 +529,18 @@
     }
 }
 
-/* Fallback for engines without container queries. */
+/* Fallback for engines without container queries. The query above measures the
+   panel; this measures the viewport. Panel content box = viewport − 64.8px (10px
+   .cv-split padding + 22.4px .cv-split-l padding, both sides), so panel 510px ⇔
+   viewport 574.8px. Not a typo — re-measure if either padding changes. */
+
 @supports not (container-type: inline-size) {
-    @media (max-width: 535px) {
+    @media (max-width: 574px) {
         .cv-square {
             display: none;
         }
 
-        .cv-principles li {
+        .cv-principle {
             gap: 0.2rem;
             grid-template-columns: 1fr;
         }

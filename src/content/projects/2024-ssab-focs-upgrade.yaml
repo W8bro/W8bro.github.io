@@ -6,6 +6,7 @@ startDate: "2024-05"
 endDate: "2024-09"
 location: Västerås
 featured: true
+projectType: In-house
 description: >
     SSAB in Borlänge needed an upgrade of their existing FOCS system. The system
     required a complete overhaul involving several key updates, such as switching to

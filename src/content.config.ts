@@ -46,6 +46,7 @@ const projectCollection = defineCollection({
         endDate: z.string(),
         location: z.string(),
         featured: z.boolean(),
+        projectType: z.string(),
         description: z.string(),
         tags: z.array(z.string()),
         isCareer: z.boolean().default(true),

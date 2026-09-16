@@ -4,6 +4,7 @@ startDate: "2018-03"
 endDate: "2018-06"
 location: Västerås
 featured: false
+projectType: project
 description: >
     Developed a monitoring system to enhance plant growth by tracking soil moisture
     and sunlight exposure, with an Android application informing users when their

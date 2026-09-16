@@ -4,6 +4,7 @@ startDate: "2020-08"
 endDate: "2022-01"
 location: Västerås
 featured: true
+projectType: in-house
 description: >
     A testing system developed to evaluate Integrated Fluidic Cartridges (IFC),
     including a real-time controller capable of performing independent tests and a

@@ -4,6 +4,7 @@ startDate: "2018-01"
 endDate: "2018-03"
 location: Västerås
 featured: false
+projectType: project
 description: >
     Implemented a Convolutional Neural Network (CNN) to solve logical IQ test
     sequences, including writing a program to generate a large training dataset —

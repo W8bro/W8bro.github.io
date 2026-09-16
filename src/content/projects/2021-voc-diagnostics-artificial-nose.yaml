@@ -4,6 +4,7 @@ startDate: "2021-01"
 endDate: "2021-05"
 location: Sundbyberg
 featured: false
+projectType: in-house
 description: >
     With a transfer of a project from Novator Solutions to Prevas, the code needed to
     be reviewed and built to ensure it was complete and executable. Task: review,

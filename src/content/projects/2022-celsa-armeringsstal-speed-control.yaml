@@ -6,6 +6,7 @@ startDate: "2022-10"
 endDate: "2023-02"
 location: Västerås
 featured: false
+projectType: in-house
 description: >
     FOCS is a software where part of the code is written in Fortran, which is old and
     hard to understand. The task was to remove the existing speed control module,

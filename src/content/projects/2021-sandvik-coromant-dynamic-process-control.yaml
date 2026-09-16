@@ -4,6 +4,7 @@ startDate: "2021-04"
 endDate: "2021-10"
 location: Västerås
 featured: false
+projectType: in-house
 description: >
     A Proof of Concept (POC) application that displays the status of robot cells,
     giving operators a good overview of the production line to monitor errors, tool

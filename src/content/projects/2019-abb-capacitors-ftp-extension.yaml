@@ -4,6 +4,7 @@ startDate: "2019-10"
 endDate: "2019-12"
 location: Västerås
 featured: false
+projectType: in-house
 description: >
     Integrating an FTP extension for an existing analysis tool. Objective: integrate
     the functionality of two separate programs into a single tool, simplifying the

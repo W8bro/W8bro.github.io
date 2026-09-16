@@ -4,6 +4,7 @@ startDate: "2017-03"
 endDate: "2017-06"
 location: Västerås
 featured: false
+projectType: project
 description: >
     As part of an applied AI course, implemented a pure text-based classification
     algorithm based on a hidden Markov model combined with a statistical three-grams

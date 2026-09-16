@@ -4,6 +4,7 @@ startDate: "2018-09"
 endDate: "2019-01"
 location: Västerås
 featured: false
+projectType: project
 description: >
     As part of a project course, responsible for both the electronics system and the
     control structure in developing a self-stabilizing bicycle — learning how to

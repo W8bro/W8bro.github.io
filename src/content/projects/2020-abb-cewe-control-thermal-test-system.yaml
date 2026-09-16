@@ -4,6 +4,7 @@ startDate: "2020-01"
 endDate: "2020-04"
 location: Västerås
 featured: false
+projectType: in-house
 description: >
     A test system to evaluate soft-starters' and contactors' thermal development
     during long operations, consisting of a client and server component. The server

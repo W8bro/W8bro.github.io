@@ -1,8 +1,27 @@
 /* Styles for src/components/cv-page.astro. Scoped — every selector here is
    .cv-prefixed and nothing else in the project uses those classes.
-   Design: issue #10, variant C9 (photographic-editorial). Two rules are load-bearing and
-   easy to break: the `font-variation-settings` on every Bodoni rule (the optical-size
-   axis, not just the weight, is what makes it legible) and the z-index on .cv-nav. */
+   Design: issue #10, variant C9 (photographic-editorial).
+
+   Ordered to follow the document: sections run in the order the elements appear in
+   cv-page.astro, with genuinely shared rules in their own "Shared" sections.
+
+     0 root & reveal      4 principles        8 projects        12 shared: icons
+     1 shared: photo      5 inputs / CTA      9 skills          13 footer
+     2 hero               6 split right      10 education      14 responsive
+     3 split left         7 shared: bands    11 elsewhere      15 print
+
+   Three orderings are load-bearing and a tidy-up can silently break them:
+     - .cv-photo::after must precede .cv-photo-hero::after (equal specificity, and the
+       hero rule only declares `background` — it inherits the rest).
+     - The @container block in section 5 must follow .cv-principle in section 4 (equal
+       specificity, so source order is the only thing that makes the override win).
+     - .cv-band must precede .cv-band-alt.
+   The z-index on .cv-nav and the font-variation-settings on every Bodoni rule are
+   load-bearing too, but those are noted at the rules themselves. */
+
+/* ======================================================================
+   0. Root, colour tokens and the reveal-on-scroll machinery
+   ====================================================================== */
 
 .cv {
     /* colour tokens come from src/styles/global.css */
@@ -37,6 +56,10 @@
         translate: none;
     }
 }
+
+/* ======================================================================
+   1. Shared: the photographic duotone (hero and split both use it)
+   ====================================================================== */
 
 /* Every photograph is duotoned into the earth/gold range in CSS, so source images
    can be plain frames — see src/data/photos.ts. */
@@ -75,7 +98,10 @@
     position: absolute;
 }
 
-/* ---------- hero ---------- */
+/* ======================================================================
+   2. Hero  —  #about
+   ====================================================================== */
+
 .cv-hero {
     color: var(--paper);
     display: flex;
@@ -128,12 +154,6 @@
 .cv-nav a.is-on {
     border-bottom: 1px solid var(--terra-lift);
     color: var(--terra-lift);
-}
-
-.cv-glyph {
-    color: var(--terra-lift);
-    font-size: 1.6rem;
-    margin-left: auto;
 }
 
 /* Nature's poster margin. */
@@ -224,7 +244,10 @@
     background: rgb(251, 247, 241, 0.14);
 }
 
-/* ---------- Wooden split ---------- */
+/* ======================================================================
+   3. Wooden split, left panel  —  #experience
+   ====================================================================== */
+
 .cv-split {
     background: #100f0d;
     display: grid;
@@ -247,6 +270,20 @@
     overflow: hidden;
     padding: clamp(1.4rem, 3.4vw, 3rem);
     position: relative;
+}
+
+.cv-split-l::after {
+    background: linear-gradient(
+        to top,
+        rgb(16, 15, 13, 0.72) 0%,
+        rgb(16, 15, 13, 0.35) 45%,
+        transparent 75%
+    );
+    content: "";
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 0;
 }
 
 .cv-photo-split {
@@ -301,63 +338,9 @@
     text-align: right;
 }
 
-/* Wooden: frosted-glass inputs floating over the photograph beside a hard white
-   square button. */
-.cv-inputs {
-    align-items: stretch;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-    position: relative;
-    z-index: 1;
-}
-
-/* Direct children only — the arrow inside .cv-square is a span too. */
-.cv-inputs > span {
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
-    background: rgb(251, 247, 241, 0.12);
-    border-radius: 10px;
-    box-shadow: inset 0 0 0 1px rgb(251, 247, 241, 0.18);
-    font-size: 0.88rem;
-    padding: 0.95rem 1.5rem;
-}
-
-/* Frosted glass matching the chips beside it, kept distinct by a brighter hairline
-   and an arrow rather than by a block of white. */
-.cv-square {
-    align-items: center;
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
-    background: rgb(251, 247, 241, 0.17);
-    border-radius: 10px;
-    box-shadow: inset 0 0 0 1px rgb(251, 247, 241, 0.45);
-    color: var(--paper);
-    display: inline-flex;
-    font-size: 0.88rem;
-    font-weight: 500;
-    gap: 0.65rem;
-    margin-left: auto;
-    padding: 0.95rem 1.4rem;
-    text-decoration: none;
-    transition:
-        background 0.3s ease,
-        box-shadow 0.3s ease;
-}
-
-.cv-square span {
-    color: var(--terra-lift);
-    transition: translate 0.3s ease;
-}
-
-.cv-square:hover {
-    background: rgb(251, 247, 241, 0.27);
-    box-shadow: inset 0 0 0 1px rgb(251, 247, 241, 0.7);
-}
-
-.cv-square:hover span {
-    translate: 3px 0;
-}
+/* ======================================================================
+   4. Work-philosophy principles (static list + carousel mode)
+   ====================================================================== */
 
 /* The principle list sits between .cv-sub and .cv-inputs, over the photograph, so it
    needs the same z-index lift every other .cv-split-l child has. Hairline-divided
@@ -390,43 +373,6 @@
     padding-top: 0.55rem;
 }
 
-/*  Measured: chips 272px + button 130px + three 0.6rem gaps 29px = 431px of panel
-    content box. Hidden at 510px so the button goes just before it would wrap under the
-    chips rather than on the same frame. Re-measure if the chip labels or the typeface
-    change. Container query, not a media query: the panel is a fraction of the viewport
-    on desktop but full width below 990px.
-   
-    The same threshold drops the principle rows to one column: a 13ch label column plus
-    the line does not fit a ~325px panel. Must stay below .cv-principle — equal
-    specificity, so source order is the only thing that makes it win. */
-@container panel (max-width: 510px) {
-    .cv-square {
-        display: none;
-    }
-
-    .cv-principle {
-        gap: 0.2rem;
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Fallback for engines without container queries. */
-@supports not (container-type: inline-size) {
-    @media (max-width: 535px) {
-        .cv-square {
-            display: none;
-        }
-
-        .cv-principles li {
-            gap: 0.2rem;
-            grid-template-columns: 1fr;
-        }
-    }
-}
-
-/* ---- carousel mode. .is-live is added by the script, so with JS off (and in the
-   PDF, where the script's effect is reverted below) every principle stays visible
-   as a plain hairline-divided list. ---- */
 .cv-principles.is-live {
     max-width: none;
 }
@@ -499,19 +445,106 @@
     text-transform: uppercase;
 }
 
-.cv-split-l::after {
-    background: linear-gradient(
-        to top,
-        rgb(16, 15, 13, 0.72) 0%,
-        rgb(16, 15, 13, 0.35) 45%,
-        transparent 75%
-    );
-    content: "";
-    inset: 0;
-    pointer-events: none;
-    position: absolute;
-    z-index: 0;
+/* ======================================================================
+   5. Inputs and CTA, plus the narrow-panel overrides for both
+   this section and section 4  —  see the note on @container
+   ====================================================================== */
+
+/* Wooden: frosted-glass inputs floating over the photograph beside a hard white
+   square button. */
+.cv-inputs {
+    align-items: stretch;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    position: relative;
+    z-index: 1;
 }
+
+/* Direct children only — the arrow inside .cv-square is a span too. */
+.cv-inputs > span {
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    background: rgb(251, 247, 241, 0.12);
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 1px rgb(251, 247, 241, 0.18);
+    font-size: 0.88rem;
+    padding: 0.95rem 1.5rem;
+}
+
+/* Frosted glass matching the chips beside it, kept distinct by a brighter hairline
+   and an arrow rather than by a block of white. */
+.cv-square {
+    align-items: center;
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    background: rgb(251, 247, 241, 0.17);
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 1px rgb(251, 247, 241, 0.45);
+    color: var(--paper);
+    display: inline-flex;
+    font-size: 0.88rem;
+    font-weight: 500;
+    gap: 0.65rem;
+    margin-left: auto;
+    padding: 0.95rem 1.4rem;
+    text-decoration: none;
+    transition:
+        background 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.cv-square span {
+    color: var(--terra-lift);
+    transition: translate 0.3s ease;
+}
+
+.cv-square:hover {
+    background: rgb(251, 247, 241, 0.27);
+    box-shadow: inset 0 0 0 1px rgb(251, 247, 241, 0.7);
+}
+
+.cv-square:hover span {
+    translate: 3px 0;
+}
+
+/*  Measured: chips 272px + button 130px + three 0.6rem gaps 29px = 431px of panel
+    content box. Hidden at 510px so the button goes just before it would wrap under the
+    chips rather than on the same frame. Re-measure if the chip labels or the typeface
+    change. Container query, not a media query: the panel is a fraction of the viewport
+    on desktop but full width below 990px.
+   
+    The same threshold drops the principle rows to one column: a 13ch label column plus
+    the line does not fit a ~325px panel. Must stay below .cv-principle — equal
+    specificity, so source order is the only thing that makes it win. */
+@container panel (max-width: 510px) {
+    .cv-square {
+        display: none;
+    }
+
+    .cv-principle {
+        gap: 0.2rem;
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Fallback for engines without container queries. */
+@supports not (container-type: inline-size) {
+    @media (max-width: 535px) {
+        .cv-square {
+            display: none;
+        }
+
+        .cv-principles li {
+            gap: 0.2rem;
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+/* ======================================================================
+   6. Wooden split, right panel  —  the roles list
+   ====================================================================== */
 
 .cv-split-r {
     background: var(--charcoal);
@@ -577,7 +610,10 @@
     margin: 0.2rem 0 0;
 }
 
-/* ---------- bands ---------- */
+/* ======================================================================
+   7. Shared: band chrome (every #projects/#skills/#papers band)
+   ====================================================================== */
+
 .cv-band {
     margin: 0 auto;
     max-width: 1500px;
@@ -643,6 +679,10 @@
     display: none;
 }
 
+/* ======================================================================
+   8. Projects  —  #projects
+   ====================================================================== */
+
 .cv-proj {
     align-items: baseline;
     border-bottom: 1px solid rgb(34, 32, 29, 0.13);
@@ -702,45 +742,9 @@
     white-space: nowrap;
 }
 
-/* Elsewhere reuses the assignment-row idiom so the band reads as native. */
-.cv-where {
-    align-items: center;
-    align-self: center;
-    color: var(--terra-deep);
-    display: flex;
-    justify-content: center;
-}
-
-/* brand marks track the cap height of the label rather than a fixed rem */
-.cv-icon-brand {
-    color: var(--terra-deep);
-    flex: none;
-    height: 2.5em;
-    width: 2.5em;
-}
-
-.cv-link:hover h3 {
-    color: var(--terra);
-}
-
-.cv-icon {
-    height: 1.5rem;
-    vertical-align: -0.5em;
-    width: 1.5rem;
-}
-
-.cv-icon-button {
-    height: 1.6rem;
-    margin-left: 0.5em;
-    vertical-align: -0.65em;
-    width: 1.6rem;
-}
-
-.cv-icon-small {
-    height: 0.95rem;
-    vertical-align: -0.2em;
-    width: 0.95rem;
-}
+/* ======================================================================
+   9. Skills  —  #skills
+   ====================================================================== */
 
 .cv-skills {
     margin: 0;
@@ -775,11 +779,73 @@
     margin: 0;
 }
 
+/* ======================================================================
+   10. Education and Published  —  #papers
+   ====================================================================== */
+
 .cv-two {
     display: grid;
     gap: clamp(1.6rem, 5vw, 4.5rem);
     grid-template-columns: 1fr 1fr;
 }
+
+/* ======================================================================
+   11. Elsewhere  —  #elsewhere
+   ====================================================================== */
+
+/* Elsewhere reuses the assignment-row idiom so the band reads as native. */
+.cv-where {
+    align-items: center;
+    align-self: center;
+    color: var(--terra-deep);
+    display: flex;
+    justify-content: center;
+}
+
+/* brand marks track the cap height of the label rather than a fixed rem */
+.cv-icon-brand {
+    color: var(--terra-deep);
+    flex: none;
+    height: 2.5em;
+    width: 2.5em;
+}
+
+.cv-link:hover h3 {
+    color: var(--terra);
+}
+
+/* ======================================================================
+   12. Shared: glyphs and icons (used across several sections)
+   ====================================================================== */
+
+.cv-glyph {
+    color: var(--terra-lift);
+    font-size: 1.6rem;
+    margin-left: auto;
+}
+
+.cv-icon {
+    height: 1.5rem;
+    vertical-align: -0.5em;
+    width: 1.5rem;
+}
+
+.cv-icon-button {
+    height: 1.6rem;
+    margin-left: 0.5em;
+    vertical-align: -0.65em;
+    width: 1.6rem;
+}
+
+.cv-icon-small {
+    height: 0.95rem;
+    vertical-align: -0.2em;
+    width: 0.95rem;
+}
+
+/* ======================================================================
+   13. Footer
+   ====================================================================== */
 
 .cv-foot {
     border-top: 1px solid rgb(34, 32, 29, 0.2);
@@ -792,6 +858,10 @@
     padding: 1.4rem clamp(1.2rem, 4vw, 4.5rem);
     text-transform: uppercase;
 }
+
+/* ======================================================================
+   14. Responsive overrides
+   ====================================================================== */
 
 @media (max-width: 990px) {
     .cv-split,
@@ -817,12 +887,10 @@
     }
 }
 
-/* ------------------------------------------------------------------
-   PRINT / PDF. The Pipeline generates dist/cv.pdf by loading this page
-   in headless Chromium and calling page.pdf(), which does NOT scroll.
-   Without the first rule below every revealed element would still be at
-   opacity 0 and the PDF would come out blank.
-   ------------------------------------------------------------------ */
+/* ======================================================================
+   15. Print / PDF
+   ====================================================================== */
+
 @media print {
     .cv.reveal-ready [data-reveal],
     .cv.reveal-ready [data-reveal].is-in {

@@ -4,6 +4,7 @@ startDate: "2018-06"
 endDate: "2018-09"
 location: Västerås
 featured: false
+projectType: project
 description: >
     Implemented and evaluated three different global planners. Goal: develop and
     compare Dijkstra's algorithm, A*, and D* Lite regarding execution time and map

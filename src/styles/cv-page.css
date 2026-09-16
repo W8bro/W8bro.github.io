@@ -359,36 +359,6 @@
     translate: 3px 0;
 }
 
-/* Measured: chips 272px + button 130px + three 0.6rem gaps 29px = 431px of panel
-   content box. Hidden at 510px so the button goes just before it would wrap under the
-   chips rather than on the same frame. Re-measure if the chip labels or the typeface
-   change. Container query, not a media query: the panel is a fraction of the viewport
-   on desktop but full width below 990px. */
-@container panel (max-width: 510px) {
-    .cv-square {
-        display: none;
-    }
-
-    .cv-principle {
-        gap: 0.2rem;
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Fallback for engines without container queries. */
-@supports not (container-type: inline-size) {
-    @media (max-width: 535px) {
-        .cv-square {
-            display: none;
-        }
-
-        .cv-principles li {
-            gap: 0.2rem;
-            grid-template-columns: 1fr;
-        }
-    }
-}
-
 /* The principle list sits between .cv-sub and .cv-inputs, over the photograph, so it
    needs the same z-index lift every other .cv-split-l child has. Hairline-divided
    rows rather than frosted chips — six chips of prose would out-weigh the headline. */
@@ -418,6 +388,40 @@
     grid-template-columns: 13ch 1fr;
     line-height: 1.45;
     padding-top: 0.55rem;
+}
+
+/*  Measured: chips 272px + button 130px + three 0.6rem gaps 29px = 431px of panel
+    content box. Hidden at 510px so the button goes just before it would wrap under the
+    chips rather than on the same frame. Re-measure if the chip labels or the typeface
+    change. Container query, not a media query: the panel is a fraction of the viewport
+    on desktop but full width below 990px.
+   
+    The same threshold drops the principle rows to one column: a 13ch label column plus
+    the line does not fit a ~325px panel. Must stay below .cv-principle — equal
+    specificity, so source order is the only thing that makes it win. */
+@container panel (max-width: 510px) {
+    .cv-square {
+        display: none;
+    }
+
+    .cv-principle {
+        gap: 0.2rem;
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Fallback for engines without container queries. */
+@supports not (container-type: inline-size) {
+    @media (max-width: 535px) {
+        .cv-square {
+            display: none;
+        }
+
+        .cv-principles li {
+            gap: 0.2rem;
+            grid-template-columns: 1fr;
+        }
+    }
 }
 
 /* ---- carousel mode. .is-live is added by the script, so with JS off (and in the
@@ -482,19 +486,6 @@
 .cv-principle-dots button:focus-visible {
     outline: 2px solid var(--terra-lift);
     outline-offset: 3px;
-}
-
-.cv-principles li {
-    align-items: baseline;
-    border-top: 1px solid rgb(251, 247, 241, 0.18);
-    color: rgb(251, 247, 241, 0.82);
-    display: grid;
-    font-size: 0.86rem;
-    font-weight: 300;
-    gap: 0.9rem;
-    grid-template-columns: 13ch 1fr;
-    line-height: 1.45;
-    padding-top: 0.55rem;
 }
 
 .cv-principle-label {

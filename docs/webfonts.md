@@ -37,7 +37,7 @@ downloaded. To refresh, re-fetch that CSS, take the `latin` and `latin-ext` `src
 confirm the axes survived before committing — Google's subsetter can drop them:
 
 ```sh
-npm run check:fonts    # reads each file's fvar table; also runs in CI
+npm run check:fonts    # reads each file's fvar table (run manually)
 ```
 
 Licensed under the SIL Open Font License 1.1 (`OFL-*.txt`), which permits redistribution
@@ -46,7 +46,7 @@ in this form; keep those files alongside the fonts.
 ## Two things that fail silently
 
 Both are asserted by `npm run verify:fonts`, which renders the built `dist/` in Chromium.
-Run it after `astro build`; CI runs it on every push.
+Run it after `astro build`.
 
 **Static instances instead of variable files.** If a future refresh of `public/fonts/`
 brings static weight cuts, every `font-variation-settings: "opsz" N` in

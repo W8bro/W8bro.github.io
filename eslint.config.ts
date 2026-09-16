@@ -1,8 +1,11 @@
+import { defineConfig, globalIgnores } from "eslint/config";
 import tseslint from "typescript-eslint";
+import astro from "eslint-plugin-astro";
 
-export default tseslint.config(
-    { ignores: ["dist/**", ".astro/**"] },
-    ...tseslint.configs.recommendedTypeChecked,
+export default defineConfig(
+    globalIgnores(["dist/**", ".astro/**"]),
+    tseslint.configs.recommendedTypeChecked,
+    astro.configs["flat/recommended"],
     {
         languageOptions: {
             parserOptions: {
@@ -18,5 +21,9 @@ export default tseslint.config(
             "@typescript-eslint/no-unsafe-member-access": "warn",
             "@typescript-eslint/no-unsafe-return": "warn",
         },
+    },
+    {
+        files: ["**/*.astro"],
+        extends: [tseslint.configs.disableTypeChecked],
     },
 );

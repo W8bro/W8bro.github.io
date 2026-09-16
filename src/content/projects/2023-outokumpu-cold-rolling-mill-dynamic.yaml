@@ -4,7 +4,7 @@ startDate: "2023-10"
 endDate: "2024-01"
 location: Västerås
 featured: true
-projectType: In-house
+projectType: in-house
 description: >
     A small cog in the large machine, responsible for implementing a
     customer-specific communication protocol based on TCP/IP, simulators, and

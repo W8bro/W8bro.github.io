@@ -30,7 +30,13 @@ const careerStart = careerExperience
     .map((entry) => entry.data.startDate)
     .sort()[0];
 
+if (!careerStart) throw new Error("No career experience entries found");
+
 const [careerYear, careerMonth] = careerStart.split("-").map(Number);
+
+if (!careerYear || !careerMonth)
+    throw new Error("Unable to split career start date");
+
 const timeNow = new Date();
 const years = Math.floor(
     ((timeNow.getFullYear() - careerYear) * 12 +

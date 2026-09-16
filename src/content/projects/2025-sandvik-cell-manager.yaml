@@ -4,7 +4,7 @@ startDate: "2025-01"
 endDate: "2026-01"
 location: Västerås
 featured: true
-projectType: In-house
+projectType: in-house
 description: >
     Currently ongoing project with Sandvik Rock Tools developing a new iteration on
     Prevas' in-house Cell Manager (CM) software.

@@ -4,7 +4,7 @@ startDate: "2026-02"
 endDate: "2026-09"
 location: Västerås
 featured: false
-projectType: Assignment
+projectType: assignment
 description: >
     Part of a team at ABB Robotics responsible for maintaining and developing software
     used to build, manage, and process installation packages for robot controllers. Also

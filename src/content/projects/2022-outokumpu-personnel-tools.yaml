@@ -6,7 +6,7 @@ startDate: "2022-08"
 endDate: "2023-02"
 location: Torshälla
 featured: false
-projectType: Assigment
+projectType: assignment
 description: >
     Development of web-based personnel tools, plus modernization of the user
     interface. The customer had a set of old Delphi applications that needed to be

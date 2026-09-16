@@ -4,7 +4,7 @@ startDate: "2019-01"
 endDate: "2019-06"
 location: Västerås
 featured: true
-projectType: Thesis
+projectType: thesis
 description: >
     Developing and reviewing different control structures based on robustness and
     balance, to get an unstable cycle to self-stabilize using only the steering angle.

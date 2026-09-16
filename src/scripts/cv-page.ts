@@ -161,8 +161,8 @@ if (principles && !stillness.matches) {
 
         // don't burn a timer while the panel is off-screen
         new IntersectionObserver(
-            ([entry]) => {
-                seen = entry.isIntersecting;
+            (entries) => {
+                seen = entries[0]?.isIntersecting ?? false;
                 run();
             },
             { threshold: 0.2 },

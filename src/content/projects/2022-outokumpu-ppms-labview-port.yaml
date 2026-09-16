@@ -4,7 +4,7 @@ startDate: "2022-08"
 endDate: "2022-09"
 location: Västerås
 featured: false
-projectType: In-house
+projectType: in-house
 description: >
     Porting an old LabVIEW program containing analysis and calculation tools for
     steel production to C#. Objective: facilitate Outokumpu's ability to easily

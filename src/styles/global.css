@@ -1,8 +1,19 @@
 @import "tailwindcss";
 
 /* Webfonts, self-hosted from public/fonts/ — no third-party request at runtime, and the
-   Pipeline's PDF render no longer depends on reaching Google mid-build. Provenance and
-   refresh instructions: docs/webfonts.md.
+   Pipeline's PDF render no longer depends on reaching Google mid-build.
+
+   Taken from Google Fonts' own woff2 builds (Bodoni Moda v28, Inter v20) via the css2 API,
+   requesting each weight as a *range* so a subset is one variable file rather than one file
+   per weight. To refresh, re-fetch this and take the latin / latin-ext src URLs — send a
+   modern browser User-Agent, since that header decides whether you are served woff2 or
+   legacy ttf, and confirm the axes survived before committing (Google's subsetter can drop
+   them, which silently breaks the opsz pinning in cv-page.css):
+
+   https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400..700&family=Inter:wght@200..500&display=swap
+
+   The cyrillic, greek, vietnamese, math and symbol subsets that URL also offers were not
+   downloaded. Licensed OFL 1.1 — keep the OFL-*.txt files alongside the fonts.
 
    Both faces are variable. The weight ranges below are what the files actually carry (wider
    than the Site uses), so the browser interpolates rather than synthesising a fake bold.

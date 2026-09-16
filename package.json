@@ -11,8 +11,6 @@
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
-    "check:fonts": "node scripts/check-font-axes.mjs",
-    "verify:fonts": "node scripts/verify-fonts.mjs",
     "format": "prettier --write \"src/**/*.{astro,ts,css,yaml,json,md}\"",
     "format:check": "prettier --check \"src/**/*.{astro,ts,css,yaml,json,md}\"",
     "lint:css": "stylelint \"src/**/*.css\"",

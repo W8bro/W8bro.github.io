@@ -20,7 +20,10 @@ const education = await getCollection("education");
 education.sort((a, b) => b.data.startDate.localeCompare(a.data.startDate));
 
 const publications = await getCollection("publications");
-publications.sort((a, b) => b.data.year - a.data.year);
+publications.sort(
+    (a, b) => 
+        a.data.title.localeCompare(b.data.title) || b.data.year - a.data.year
+);
 
 const careerProjects = projects.filter((project) => project.data.isCareer);
 
